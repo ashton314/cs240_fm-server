@@ -15,7 +15,7 @@
    - `root-person` ID of Person entity this account maps to
   "
   (:gen-class)
-  (:requires [fm-server.models.auth-token :as auth-token]))
+  (:require [fm-server.models.auth-token :as auth-token]))
 
 (defrecord Account [id username password first-name last-name email gender root-person])
 
