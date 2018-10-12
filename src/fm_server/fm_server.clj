@@ -1,4 +1,4 @@
-(ns fm-server.core
+(ns fm-server.fm-server
   "Family Sever Application"
   (:gen-class))
 

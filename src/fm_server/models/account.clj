@@ -1,4 +1,4 @@
-(ns fm-server.app.account
+(ns fm-server.models.account
   "Handles user creation, authentication, etc.
 
   ### Account
@@ -14,19 +14,34 @@
    - `gender` Either `:m` or `:f`
    - `root-person` ID of Person entity this account maps to
   "
-  (:gen-class))
+  (:gen-class)
+  (:requires [fm-server.models.auth-token :as auth-token]))
 
 (defrecord Account [id username password first-name last-name email gender root-person])
 
 (defn set-password
-  "Sets an account password"
+  "Sets an account password."
   [account new-passwd]
   (conj account {:password new-passwd}))
 
 (defn correct-password?
-  "Checks a password on an account"
+  "Checks a password on an account."
   [account passwd]
   (= (:password account) passwd))
+
+(defn authenticate
+  "Checks a password and returns a token if it's good."
+  [account passwd]
+  (if (correct-password? account passwd)
+    (auth-token/generate-token (:id account))
+    nil))
+
+(defn good-token?
+  "Checks if a token is indeed owned by this model.
+
+  **TODO**: Check token expiration"
+  [account token]
+  (= (:account-id token) (:id account)))
 
 (defn pack
   "Change an account into a native Clojure data structure."
