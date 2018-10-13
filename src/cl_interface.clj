@@ -1,15 +1,15 @@
-(ns web-server
-  "Primary web server class"
+(ns cl-interface
+  "Runs the app from a command-line interface"
   (:gen-class)
   (:require [fm-app.fm-app :as app]
-            (storage.db [account    :as storage-account]
-                        [person     :as storage-person]
-                        [event     :as storage-event]
-                        [auth-token :as storage-authy])))
+            (storage.mem [account    :as storage-account]
+                         [person     :as storage-person]
+                         [event     :as storage-event]
+                         [auth-token :as storage-authy])))
 
 
 (def conf
-  "Configruation for the web server"
+  "Configruation for the command-line interface."
   {:storage {:account    {:save storage-account/save-account! ;TODO: wrap this in an object
                           :new  storage-account/new-account!
                           :find storage-account/find-username}
@@ -18,7 +18,6 @@
    :server  {:port 8080}})
 
 (defn -main
-  "Fire off the web server. Main method---port may be listed on command
-  line. Otherwise the default 8080 will be used."
+  "Begin the command-line interface to the Family Map program."
   [& args]
   (app/create-app conf))

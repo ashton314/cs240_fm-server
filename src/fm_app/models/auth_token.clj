@@ -1,4 +1,4 @@
-(ns fm-server.models.auth-token
+(ns fm-app.models.auth-token
   "Authorization token"
   (:gen-class))
 

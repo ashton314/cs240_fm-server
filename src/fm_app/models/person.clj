@@ -1,4 +1,4 @@
-(ns fm-server.models.person
+(ns fm-app.models.person
   "A person in a family tree.
 
   ### Person
