@@ -5,7 +5,7 @@
   the Account's `unpack` function to get a vitalized record."
   (:gen-class)
   (:require [storage.utils :as util]
-            [storage.account-protocol :refer :all]
+            [storage.protocols.account :refer :all]
             [clojure.java.jdbc :as jdbc]))
 
 (defrecord AccountDbStorage

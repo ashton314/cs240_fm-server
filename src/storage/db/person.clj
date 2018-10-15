@@ -1,10 +1,15 @@
 (ns storage.db.person
   "Database backend for storing Person records"
-  (:gen-class))
+  (:gen-class)
+  (:require [storage.utils :as util]
+            [storage.protocols.person :refer :all]
+            [clojure.java.jdbc :as jdbc]))
 
-(defn save-person!
-  "Saves a packed Person."
-  [person]
-  nil)
+(defrecord PersonDbStorage
+    [db-spec]
+  PersonStorage
 
-;; Other methods here
+  (create! [self] nil)
+  (save! [self packed-person] nil)
+  (fetch [self person-id] nil)
+  (fetch-all [self field value] nil))  

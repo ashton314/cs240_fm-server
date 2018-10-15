@@ -1,10 +1,14 @@
 (ns storage.db.auth-token
   "Database backend for storing Authentication Tokens"
-  (:gen-class))
+  (:gen-class)
+  (:require [storage.utils :as util]
+            [storage.protocols.auth-token :refer :all]
+            [clojure.java.jdbc :as jdbc]))
 
-(defn save-token!
-  "Saves a packed token."
-  [token]
-  nil)
+(defrecord AuthTokenDbStorage
+    [db-spec]
+  AuthTokenStorage
 
-;; Other methods here
+  (create! [self] nil)
+  (save! [self] nil)
+  (fetch [self token-id] nil))

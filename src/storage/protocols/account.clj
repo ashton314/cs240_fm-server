@@ -1,4 +1,4 @@
-(ns storage.account-protocol
+(ns storage.protocols.account
   "Interface Account storage mechanisms must implement"
   (:gen-class))
 
