@@ -2,17 +2,16 @@
   "Primary web server class"
   (:gen-class)
   (:require [fm-app.fm-app :as app]
+            [clojure.data.json :as json]
             (storage.db [account    :as storage-account]
                         [person     :as storage-person]
-                        [event     :as storage-event]
+                        [event      :as storage-event]
                         [auth-token :as storage-authy])))
 
 
 (def conf
   "Configruation for the web server"
-  {:storage {:account    {:save storage-account/save-account! ;TODO: wrap this in an object
-                          :new  storage-account/new-account!
-                          :find storage-account/find-username}
+  {:storage {:account    "Account storage object here"
              :person     "New person storage system here"
              :auth-token "Authy storage"}
    :server  {:port 8080}})
