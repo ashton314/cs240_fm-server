@@ -17,7 +17,7 @@
   (:gen-class))
 
 
-(defrecord Person [id first-name last-name gender father mother spouse owner-id])
+(defrecord Person [id first_name last_name gender father mother spouse owner_id])
 
 (defn owned-by?
   "Returns whether or not this Person is owned by a given Account."

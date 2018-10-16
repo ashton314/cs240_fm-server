@@ -8,4 +8,4 @@
   (save! [self packed-event] "Saves a packed Event.")
   (fetch [self event-id] "Returns a packed Event record.")
   (get-user-events [self account] "Gets Events for a given user.")
-  (get-person-events [self person] "Gets Events for a given person.")
+  (get-person-events [self person] "Gets Events for a given person."))

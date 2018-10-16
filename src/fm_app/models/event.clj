@@ -11,7 +11,7 @@
   "
   (:gen-class))
 
-(defrecord Event [id person-id latitude longitude country city event-type timestamp owner-id])
+(defrecord Event [id person_id latitude longitude country city event_type timestamp owner_id])
 
 (defn belongs-to?
   "Returns whether or not this Event belongs to a given Person."

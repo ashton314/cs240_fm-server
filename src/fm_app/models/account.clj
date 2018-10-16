@@ -17,7 +17,7 @@
   (:gen-class)
   (:require [fm-app.models.auth-token :as auth-token]))
 
-(defrecord Account [id username password first-name last-name email gender root-person])
+(defrecord Account [id username password first_name last_name email gender root-person])
 
 (defn set-password
   "Sets an account password."

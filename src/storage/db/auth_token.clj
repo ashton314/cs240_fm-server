@@ -10,5 +10,5 @@
   AuthTokenStorage
 
   (create! [self] nil)
-  (save! [self] nil)
+  (save! [self packed-auth-token] nil)
   (fetch [self token-id] nil))

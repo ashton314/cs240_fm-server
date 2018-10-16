@@ -2,7 +2,7 @@
   "Authorization token"
   (:gen-class))
 
-(defrecord AuthToken [id account-id token expires])
+(defrecord AuthToken [id account_id token expires])
 
 (defn pack
   "Change an AuthToken into a native Clojure data structure."
