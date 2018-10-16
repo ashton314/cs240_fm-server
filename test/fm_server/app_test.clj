@@ -36,10 +36,15 @@
 (deftest account-model-test
   (let [store account-db
         homsar (account/unpack {:first_name "Homsar" :username "homsar" :password "tinfoil"})]
-    (is (account/correct-password? homsar "tinfoil"))
-    (is (not (account/correct-password? homsar "tinfoli")))
-    (is (not (account/authenticate homsar "tinfoli")))
-    (let [tok (account/authenticate homsar "tinfoil")]
-      (is tok)
-      (is (account/good-token? homsar tok)))))
-    
+    (testing "passwords"
+      (is (account/correct-password? homsar "tinfoil"))
+      (is (not (account/correct-password? homsar "tinfoli")))
+      (is (not (account/authenticate homsar "tinfoli")))
+      (let [tok (account/authenticate homsar "tinfoil")]
+        (is tok)
+        (is (account/good-token? homsar tok))))))
+
+(deftest person-model-test
+  (prn "IMPLEMENT ME!")
+  (testing "test person models"
+    (is (= 0 1))))
