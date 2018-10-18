@@ -1,4 +1,4 @@
-(ns storage.protocols.auth-token
+(ns fm-app.storage-protocols.auth-token
   "Interfaces that AuthToken storage mechanisms must implement"
   (:gen-class))
 

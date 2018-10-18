@@ -1,4 +1,4 @@
-(ns storage.protocols.event
+(ns fm-app.storage-protocols.event
   "Interfaces that Event storage mechanisms must implement"
   (:gen-class))
 

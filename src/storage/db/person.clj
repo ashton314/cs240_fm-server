@@ -2,7 +2,7 @@
   "Database backend for storing Person records"
   (:gen-class)
   (:require [storage.utils :as util]
-            [storage.protocols.person :refer :all]
+            [fm-app.storage-protocols.person :refer :all]
             [clojure.java.jdbc :as jdbc]))
 
 (defrecord PersonDbStorage

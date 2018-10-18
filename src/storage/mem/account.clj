@@ -5,7 +5,7 @@
   the Account's `unpack` function to get a vitalized record."
   (:gen-class)
   (:require [storage.utils :as util]
-            [storage.protocols.account :refer :all]
+            [fm-app.storage-protocols.account :refer :all]
             [mount.core :as mount]
             [clojure.java.jdbc :as jdbc]))
 

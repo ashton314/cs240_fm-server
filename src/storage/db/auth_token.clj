@@ -2,7 +2,7 @@
   "Database backend for storing Authentication Tokens"
   (:gen-class)
   (:require [storage.utils :as util]
-            [storage.protocols.auth-token :refer :all]
+            [fm-app.storage-protocols.auth-token :refer :all]
             [clojure.java.jdbc :as jdbc]))
 
 (defrecord AuthTokenDbStorage

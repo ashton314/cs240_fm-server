@@ -1,6 +1,6 @@
 (ns fm-server.db-test
   (:require [storage.db.account :as account-storage]
-            [storage.protocols.account :as acc-proto]
+            [fm-app.storage-protocols.account :as acc-proto]
             [clojure.test :refer :all]
             [clojure.java.io :as io]))
 

@@ -5,7 +5,7 @@
   the Event's `unpack` function to get a vitalized record."
   (:gen-class)
   (:require [storage.utils :as util]
-            [storage.protocols.event :refer :all]
+            [fm-app.storage-protocols.event :refer :all]
             [clojure.java.jdbc :as jdbc]))
 
 (defrecord EventDbStorage

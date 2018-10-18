@@ -1,4 +1,4 @@
-(ns storage.protocols.person
+(ns fm-app.storage-protocols.person
   "Interfaces that Person storage mechanisms must implement"
   (:gen-class))
 
