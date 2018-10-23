@@ -9,7 +9,32 @@
     [db-spec]
   PersonStorage
 
-  (create! [self] nil)
-  (save! [self packed-person] nil)
-  (fetch [self person-id] nil)
-  (fetch-all [self field value] nil))  
+  (create! [self]
+    (let [new_id (jdbc/insert! db-spec "people" {:created_at (util/sql-now)})]
+      (-> new_id first seq first (get 1))))
+
+  (save! [self packed-person]
+    (jdbc/update! db-spec "people" packed-person ["id = ?" (:id packed-person)]))
+
+  (fetch [self person-id]
+      (first (jdbc/query db-spec ["SELECT * FROM people WHERE id = ?" person-id])))
+
+  (fetch-all [self field value]
+    (jdbc/query db-spec [(str "SELECT * FROM people WHERE `" field "` = ?") value])))
+
+(defn migrate!
+  "Creates people table if it doesn't exist."
+  [db-store]
+  (jdbc/db-do-commands (:db-spec db-store)
+                       "CREATE TABLE IF NOT EXISTS people(
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  created_at TEXT DEFAULT(DATETIME('now')),
+  updated_at TEXT DEFAULT(DATETIME('now')),
+  first_name TEXT,
+  last_name TEXT,
+  gender TEXT,
+  father INTEGER,
+  mother INTEGER,
+  spouse INTEGER,
+  owner_id INTEGER
+);"))

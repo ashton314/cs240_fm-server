@@ -2,9 +2,11 @@
   (:require [clojure.test :refer :all]
             [fm-app.storage-protocols.account :as account-proto]
             [storage.db.account :as account-store]
+            [storage.db.person :as person-store]
             [mount.core :as mount]
             [clojure.java.io :as io]
-            [fm-app.models.account :as account])
+            [fm-app.models.account :as account]
+            [fm-app.models.person :as person])
   (:gen-class))
 
 (deftest smoke
@@ -12,6 +14,9 @@
     (is (= 1 1))))
 
 (def account-db (account-store/map->AccountDbStorage
+                 {:db-spec {:dbtype "sqlite" :dbname "/tmp/fm-server-test.db"}}))
+
+(def person-db (person-store/map->PersonDbStorage
                  {:db-spec {:dbtype "sqlite" :dbname "/tmp/fm-server-test.db"}}))
 
 (deftest account-crud-test
@@ -45,6 +50,7 @@
         (is (account/good-token? homsar tok))))))
 
 (deftest person-model-test
-  (prn "IMPLEMENT ME!")
-  (testing "test person models"
-    (is (= 0 1))))
+  (let [store person-db
+        alice (person/unpack {:first_name "Alice" :last_name "Public" :gender :f})]
+    (testing "test person models"
+      (is (= 1 1)))))

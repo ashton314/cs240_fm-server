@@ -6,13 +6,13 @@
   Fields:
 
    - `id` unique identifier
-   - `first-name`
-   - `last-name`
+   - `first_name`
+   - `last_name`
    - `gender` either `:m` or `:f`
    - `father` ID of father (another Person object)
    - `mother` ditto
    - `spouse` ditto
-   - `owner-id` ID of Account that this belongs to
+   - `owner_id` ID of Account that this belongs to
   "
   (:gen-class))
 
@@ -32,7 +32,9 @@
 (defn unpack
   "Convert a properly formatted Clojure data structure into an Person record."
   [data]
-  (map->Person data))
+  (map->Person (conj data {:gender (cond (= (:gender data) ":m") :m
+                                         (= (:gender data) ":f") :f
+                                         :else (:gender data))})))
 
 (defn marry
   "Sets to Person's spouse records equal to each other. Returns a vector
