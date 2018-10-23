@@ -51,6 +51,14 @@
 
 (deftest person-model-test
   (let [store person-db
-        alice (person/unpack {:first_name "Alice" :last_name "Public" :gender :f})]
+        alice (person/unpack {:first_name "Alice" :last_name "Public" :gender :f})
+        bob   (person/unpack {:first_name "Bob" :last_name "Doe" :gender :m})
+        eve   (person/unpack {:first_name "Eve" :last_name "Sdropper" :gender :f})]
     (testing "test person models"
-      (is (= 1 1)))))
+      (let [[alice1 bob1] (person/marry alice bob)]
+        (is (= (:spouse alice1) (:id bob)))
+        (is (= (:spouse bob1) (:id alice))))
+      (let [did-test (atom false)]
+        (try (person/marry alice eve)
+             (catch Error e (swap! did-test (constantly true))))
+        (is (= @did-test true))))))

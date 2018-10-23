@@ -36,10 +36,13 @@
                                          (= (:gender data) ":f") :f
                                          :else (:gender data))})))
 
-(defn marry
+(defn
+  marry
   "Sets to Person's spouse records equal to each other. Returns a vector
-  in the same order the people were given."
+  in the same order the people were given.
+  Throws an error if the genders are equal."
   [man woman]
+  (assert (not (= (:gender man) (:gender woman)))) ; marriage is defined between a man and a woman
   [(conj man   {:spouse (:id woman)})
    (conj woman {:spouse (:id man)})])
 
