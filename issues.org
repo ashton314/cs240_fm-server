@@ -1,0 +1,13 @@
+* ISSUES
+
+** TASKS
+
+*** TODO [#A] Finish testing person storage
+*** TODO [#B] Finish testing person model
+*** TODO Build and test other models
+*** TODO Implement and test storage methods for [0/2]
+ - [ ] AuthToken
+ - [ ] Event
+
+
+** BUGS
