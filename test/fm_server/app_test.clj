@@ -16,7 +16,7 @@
 
 (deftest account-crud-test
   (let [store account-db]
-        (io/delete-file (:dbname (:db-spec store)))
+        (io/delete-file (:dbname (:db-spec store)) true)
     (account-store/migrate! store)
     (let [packed-account {:id (account-proto/create! store)
                           :first_name "Homestar"

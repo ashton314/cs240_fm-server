@@ -14,7 +14,7 @@
 (deftest crud-test
   (let [store (account-storage/map->AccountDbStorage
                {:db-spec {:dbtype "sqlite" :dbname "/tmp/fm-server-test.db"}})]
-    (io/delete-file (:dbname (:db-spec store)))
+    (io/delete-file (:dbname (:db-spec store)) true)
     (account-storage/migrate! store)
     (let [packed-account {:id (acc-proto/create! store)
                           :first_name "Homestar"
