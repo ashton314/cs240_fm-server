@@ -8,6 +8,7 @@
 *** TODO Implement and test storage methods for [0/2]
  - [ ] AuthToken
  - [ ] Event
-
+*** TODO generate better fake data
+I've already got the JSON files
 
 ** BUGS

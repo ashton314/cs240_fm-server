@@ -6,8 +6,14 @@
   Fields:
 
    - `id` unique identifier
-   - `person-id` ID of Person record this event belongs to
-   - `owner-id` ID of Account that this belongs to
+   - `person_id` ID of Person record this event belongs to
+   - `latitude`
+   - `longitude`
+   - `country` 
+   - `city`
+   - `event_type` Type of event (e.g. marriage, birth, death, etc.)
+   - `timestamp` When this event occured
+   - `owner_id` ID of Account that this belongs to
   "
   (:gen-class))
 

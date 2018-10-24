@@ -33,7 +33,9 @@
   "Convert a properly formatted Clojure data structure into an Person record."
   [data]
   (map->Person (conj data {:gender (cond (= (:gender data) ":m") :m
+                                         (= (:gender data) "m") :m
                                          (= (:gender data) ":f") :f
+                                         (= (:gender data) "f") :f
                                          :else (:gender data))})))
 
 (defn
