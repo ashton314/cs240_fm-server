@@ -2,17 +2,17 @@
   "Authentication service"
   (:gen-class)
   (:require [fm-app.models.person :as person]
-            [fm-app.models.account :as account]))
+            [fm-app.models.account :as account]
+            [fm-app.storage-protocols.account :as account-proto]
+            [fm-app.storage-protocols.person :as person-proto]))
 
 (defn authenticate
   "Takes a username and a password. Returns an AuthToken if password is good."
   [storage username passwd]
-  ;; this should do something like
-  ;; (-> username
-  ;;     (storage find-username)
-  ;;     account/unpack
-  ;;     (account/correct-password? passwd))
-  nil)
+  (if-let [account (account-proto/find-username storage username)]
+    (-> account
+        account/unpack
+        (account/authenticate passwd))))
 
 (defn revoke-token
   "Revokes an AuthToken."
@@ -22,5 +22,4 @@
 (defn change-password
   "Changes Account password."
   [storage account passwd]
-  ;; TODO: store this
-  (account/set-password account passwd))
+  (account-proto/save! (account/pack (account/set-password account passwd))))

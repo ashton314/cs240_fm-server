@@ -14,6 +14,11 @@
   [data]
   (map->AuthToken data))
 
+(defn good?
+  "Is this token still valid?"
+  [token]
+  true)                                 ; FIXME: stub; check expiration
+
 (defn generate-random-string
   "Creates a random string by calling `java.util.UUID.randomUUID`."
   []

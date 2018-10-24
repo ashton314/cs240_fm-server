@@ -10,9 +10,7 @@
 
 (def conf
   "Configruation for the command-line interface."
-  {:storage {:account    {:save storage-account/save-account! ;TODO: wrap this in an object
-                          :new  storage-account/new-account!
-                          :find storage-account/find-username}
+  {:storage {:account    "This would be an account storage system"
              :person     "New person storage system here"
              :auth-token "Authy storage"}
    :server  {:port 8080}})
