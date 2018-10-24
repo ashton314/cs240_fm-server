@@ -13,3 +13,13 @@
                      "resources/faker_data/fnames.json")
                    "resources/faker_data/snames.json")]
     (rand-nth (:data (json/read-str (slurp src-file) :key-fn keyword)))))
+
+(defn gen-location
+  "Generates a name"
+  []
+  (rand-nth (:data (json/read-str (slurp "resources/faker_data/locations.json") :key-fn keyword))))
+
+(defn gen-event-type
+  "Generates random event type"
+  []
+  (rand-nth [:birth :baptism :christening :marriage :death]))
