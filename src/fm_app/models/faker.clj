@@ -23,3 +23,8 @@
   "Generates random event type"
   []
   (rand-nth [:birth :baptism :christening :marriage :death]))
+
+(defn gen-year
+  "Generates random year in the past"
+  []
+  (+ 1600 (rand-int 400)))

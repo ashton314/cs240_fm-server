@@ -44,7 +44,7 @@
   in the same order the people were given.
   Throws an error if the genders are equal."
   [man woman]
-  (assert (not (= (:gender man) (:gender woman)))) ; marriage is defined between a man and a woman
+  (assert (not (= (:gender man) (:gender woman)))) ; marriage is only defined between a man and woman
   [(conj man   {:spouse (:id woman)})
    (conj woman {:spouse (:id man)})])
 
