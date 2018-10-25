@@ -11,4 +11,4 @@
 
   (create! [self] nil)
   (save! [self packed-auth-token] nil)
-  (fetch [self token-id] nil))
+  (fetch [self token-string] nil))

@@ -27,6 +27,6 @@
 (defn generate-token
   "Creates a new Authentication Token."
   ([account-id]
-   (unpack {:account-id account-id :token (generate-random-string)}))
+   (unpack {:account_id account-id :token (generate-random-string)}))
   ([account-id expires]
-   (unpack {:account-id account-id :expires expires :token (generate-random-string)})))
+   (unpack {:account_id account-id :expires expires :token (generate-random-string)})))

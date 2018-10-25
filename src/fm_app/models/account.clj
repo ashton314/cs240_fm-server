@@ -37,11 +37,10 @@
     nil))
 
 (defn good-token?
-  "Checks if a token is indeed owned by this model.
-
-  **TODO**: Check token expiration"
+  "Checks if a token is indeed owned by this model and if it's still a good token."
   [account token]
-  (= (:account-id token) (:id account)))
+  (and (= (:account-id token) (:id account))
+       (auth-token/good? token)))
 
 (defn pack
   "Change an account into a native Clojure data structure."
