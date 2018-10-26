@@ -8,6 +8,10 @@
                  [clojure.java-time "0.3.2"]
                  [mount "0.1.13"]
 
+                 [ring/ring-core "1.6.3"]
+                 [ring/ring-jetty-adapter "1.6.3"]
+                 [clout "2.2.1"]
+
                  [org.clojure/data.json "0.2.6"]     ; looks like all "org.clojure" libs come from https://clojure.github.io/
                  [org.xerial/sqlite-jdbc "3.25.2"]
 

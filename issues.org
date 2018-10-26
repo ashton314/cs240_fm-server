@@ -11,5 +11,7 @@
  - [ ] Event
 *** TODO generate better fake data
 I've already got the JSON files
+*** TODO Make server listen on port specified on command-line
+*** TODO Figure out logging
 
 ** BUGS

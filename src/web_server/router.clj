@@ -1,10 +1,11 @@
 (ns web-server.router
   "Routing utilities for the web server"
-  (:gen-class))
+  (:gen-class)
+  (:require [clout.core :as clout]))
 
 (defn handle-request
   "Takes a Request record and a route spec and dispatches to the proper handler."
-  [request routing-spec]
+  [request routing-spec application]
   nil)
 
 (defn parse-uri
