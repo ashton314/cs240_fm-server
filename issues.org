@@ -2,11 +2,12 @@
 
 ** TASKS
 
-*** TODO [#A] Finish testing person storage
+*** DONE [#A] Finish testing person storage
 *** TODO [#B] Finish testing person model
-*** TODO Build and test other models
-*** TODO Implement and test storage methods for [0/2]
- - [ ] AuthToken
+    Specifically, test the fill function.
+*** TODO Build and test event model
+*** TODO Implement and test storage methods for [1/2]
+ - [X] AuthToken
  - [ ] Event
 *** TODO generate better fake data
 I've already got the JSON files
