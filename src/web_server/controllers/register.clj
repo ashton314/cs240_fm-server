@@ -4,5 +4,5 @@
 
 (defn register-account
   "Create a new account"
-  [request]
+  [request app]
   nil)

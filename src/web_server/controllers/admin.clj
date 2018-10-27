@@ -7,7 +7,7 @@
   [request]
   nil)
 
-(defn load
+(defn load-record
   "Wipes all records, then adds a new Person record."
   [request]
   nil)

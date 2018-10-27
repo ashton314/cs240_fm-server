@@ -22,7 +22,15 @@
              :event      (storage-event/map->EventDbStorage {:db-spec (db-spec-default)})
              :auth-token (storage-authy/map->AuthTokenDbStorage {:db-spec (db-spec-default)})}
    :server  {:port 8080}
-   :routes "routing spec goes here"})
+   :routes {"/user/register" :register
+            "/user/login" :login
+            "/clear" :clear
+            "/fill/:username/:generations" :fill
+            "/load" :load
+            "/person/:person_id" :get-person
+            "/person" :get-all-people
+            "/event/:event_id" :get-event
+            "/event/" :get-all-events}})
 
 (defn -main
   "Fire off the web server. Main method---port may be listed on command

@@ -4,7 +4,7 @@
 
 (defn clear-storage
   "Wipes all records from storage."
-  [storage]
+  [storage-map]
   nil)
 
 (defn load-person

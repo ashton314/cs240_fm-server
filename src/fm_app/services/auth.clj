@@ -25,9 +25,9 @@
 (defn good-token-for-account?
   "Given the token string and an account id, check whether or not that token matches the account id."
   [storage token-string account-id]
-  (token-proto/fetch storage token-string)
+  (token-proto/fetch storage token-string))
 
 (defn change-password
   "Changes Account password."
   [storage account passwd]
-  (account-proto/save! (account/pack (account/set-password account passwd))))
+  (account-proto/save! storage (account/pack (account/set-password account passwd))))
