@@ -1,20 +1,12 @@
 (ns web-server.controllers.register
   "Handles registration requests"
   (:gen-class)
-  (:require [ring.util.response :as ring-response]
+  (:require [web-server.controllers.util :refer :all]
+            [ring.util.response :as ring-response]
             [ring.util.request :as ring-request]
             [clojure.tools.logging :as log]
             [clojure.data.json :as json]
             [fm-app.services.admin :as admin]))
-
-(defmacro validate
-  ([] false)
-  ([& clauses]
-   (let [[test err-code message] (first clauses)]
-     `(if ~test (validate ~@(rest clauses))
-          (-> ~message
-              ring-response/bad-request
-              (ring-response/status ~err-code))))))
 
 (defn register-account
   "Create a new account"
@@ -22,7 +14,7 @@
   (let [account-details (select-keys (json/read-str (ring-request/body-string request) :key-fn keyword)
                                      [:username :password :first_name :last_name :email :gender])]
 
-    (if-let [error-message (validate
+    (if-let [error-message (validate    ; MACROS!!!!
                             [(= #{:username :password :first_name :last_name :email :gender}
                                 (into #{} (keys account-details)))
                              400 "Missing args"]
