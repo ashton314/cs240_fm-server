@@ -22,14 +22,17 @@
         (person/pack (conj person {:id new-id}))))
   nil)
 
+(defmacro with-new
+  "Creates a new instance of a thingy and returns [id obj]"
+  [prototype storage packed-obj]
+  `(let [store ~storage
+         new-id (~(str prototype "/" "create!") store)]
+     (~(str prototype "/" "save!") store (conj packed-obj {:id new-id}))))
+  
+
 (defn register
   "Create a new account"
   [account-details storage logging]
-  ;; (prn "marker")
-  ;; (prn account-details)
-  ;; (prn storage)
-  ;; (prn logging)
-  ;; ((:info logging) (str "Account details: " account-details))
   (assert (= #{:username :password :first_name :last_name :email :gender}
              (into #{} (keys account-details)))
           (str "field mismatch, should be " #{:username :password :first_name :last_name :email :gender}))

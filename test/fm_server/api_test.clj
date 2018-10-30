@@ -2,9 +2,16 @@
   (:require [clojure.test :refer :all]
             [clojure.java.io :as io]
             [ring.mock.request :as mock]
+
             [clojure.tools.logging :as log]
+            [clojure.data.json :as json]
+
             [web-server.router :as router]
             [fm-app.fm-app :as app]
+
+            [fm-app.storage-protocols.account :as account-proto]
+            [fm-app.storage-protocols.auth-token :as auth-token-proto]
+
             (storage.db [account    :as storage-account]
                         [person     :as storage-person]
                         [event      :as storage-event]
@@ -54,5 +61,14 @@
           req (-> (mock/request :post "/user/register")
                   (mock/json-body deets))]
       (let [resp (mock-request req)]
+        (is (= (:status resp) 201) "got ok back")
+        (is (= (:id (account-proto/find-username (:account (:storage conf))
+                                                 (:username deets)))
+               (:account_id (auth-token-proto/fetch (:auth-token (:storage conf))
+                                             (:authToken (json/read-str (:body resp) :key-fn keyword)))))))
+
+      #_(let [resp (mock-request req)]
         (prn resp)
-        (is (= (:status resp) 201) "got ok back")))))
+        (is (= (:status resp) 400) "bad request")
+        (is ())))))
+      
