@@ -24,12 +24,12 @@
       (-> ({:register c-register/register-account
             :login c-login/authenticate
             :clear c-admin/clear-storage
-            :fill nil
-            :load nil
-            :get-person nil
-            :get-all-people nil
-            :get-event nil
-            :get-all-events nil} (routing-spec (ffirst matches)))
+            :fill c-people/fill-ancestry
+            :load c-admin/load-record
+            :get-person c-people/get-person
+            :get-all-people c-people/get-people
+            :get-event c-events/get-event
+            :get-all-events c-events/get-all-events} (routing-spec (ffirst matches)))
           (apply [request (get (first matches) 1) application])))))
 
 (defn parse-uri

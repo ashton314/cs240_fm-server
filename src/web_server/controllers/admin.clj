@@ -1,13 +1,20 @@
 (ns web-server.controllers.admin
   "Handles administrative requests"
-  (:gen-class))
+  (:gen-class)
+  (:require [ring.util.response :as ring-response]
+            [clojure.tools.logging :as log]
+            [fm-app.services.auth :as auth]))
 
 (defn clear-storage
   "Wipes all records from current storage system."
-  [request]
-  nil)
+  [request params app]
+  (log/info (str "Admin controller got: " request))
+  (log/info (str "Params: " params "\nApp: " app))
+  (ring-response/response "clear-storage hit!"))
 
 (defn load-record
   "Wipes all records, then adds a new Person record."
-  [request]
-  nil)
+  [request params app]
+  (log/info (str "Admin controller got: " request))
+  (log/info (str "Params: " params "\nApp: " app))
+  (ring-response/response "load-record hit!"))
