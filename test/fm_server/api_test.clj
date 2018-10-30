@@ -9,8 +9,10 @@
             [web-server.router :as router]
             [fm-app.fm-app :as app]
 
-            [fm-app.storage-protocols.account :as account-proto]
-            [fm-app.storage-protocols.auth-token :as auth-token-proto]
+            (fm-app.storage-protocols [account :as account-proto]
+                                      [event :as event-proto]
+                                      [person :as person-proto]
+                                      [auth-token :as auth-token-proto])
 
             (storage.db [account    :as storage-account]
                         [person     :as storage-person]
@@ -50,7 +52,7 @@
 (deftest register-test
   (storage-account/migrate! (:account (:storage conf)))
   (storage-authy/migrate! (:auth-token (:storage conf)))
-  ;; (storage-account/migrate! (:account (:storage conf)))
+  (storage-person/migrate! (:person (:storage conf)))
   (testing "register-a-homstar"
     (let [deets {:username (str "homsar" (rand-int 10000))
                  :password "tinfoil"
@@ -67,8 +69,7 @@
                (:account_id (auth-token-proto/fetch (:auth-token (:storage conf))
                                              (:authToken (json/read-str (:body resp) :key-fn keyword)))))))
 
-      #_(let [resp (mock-request req)]
+      (let [resp (-> (mock/request :post "/user/register") (mock/json-body deets) mock-request)]
         (prn resp)
-        (is (= (:status resp) 400) "bad request")
-        (is ())))))
+        (is (= (:status resp) 400) "bad request")))))
       

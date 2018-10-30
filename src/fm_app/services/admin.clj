@@ -36,8 +36,10 @@
   (assert (= #{:username :password :first_name :last_name :email :gender}
              (into #{} (keys account-details)))
           (str "field mismatch, should be " #{:username :password :first_name :last_name :email :gender}))
-  ;; TODO: check to make sure username not already taken
-  ;; TODO: check to make sure no datamembers are null
+  (assert (nil? (account-proto/find-username (:account storage) (:username account-details)))
+          "Username already in use")
+  (assert (not-any? nil? (vals account-details))
+          "Account details may not be null")
   (let [new-account (account/unpack account-details)
         new-id      (account-proto/create! (:account storage))
         token       (token/generate-token new-id)]
