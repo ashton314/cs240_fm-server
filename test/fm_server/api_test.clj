@@ -72,4 +72,3 @@
       (let [resp (-> (mock/request :post "/user/register") (mock/json-body deets) mock-request)]
         (prn resp)
         (is (= (:status resp) 400) "bad request")))))
-      

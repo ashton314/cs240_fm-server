@@ -66,9 +66,9 @@
    (if (= levels 0)
      person
      (let [woman (unpack (conj (dissoc person :id)
-                               {:first-name (gen-name :f :first) :last-name (gen-name :f :last) :gender :f :id (gen-id)}))
+                               {:first_name (gen-name :f :first) :last_name (gen-name :f :last) :gender :f :id (gen-id)}))
            man (unpack (conj (dissoc person :id)
-                             {:first-name (gen-name :m :first) :last-name (gen-name :m :last) :gender :m :id (gen-id)}))]
+                             {:first_name (gen-name :m :first) :last_name (gen-name :m :last) :gender :m :id (gen-id)}))]
        (let [[dad mom] (marry man woman)]
          (flatten (conj (map #(populate-ancestry % (- levels 1) gen-name gen-id)
                              [dad mom])
