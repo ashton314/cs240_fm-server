@@ -4,6 +4,7 @@
   (:require [fm-app.fm-app :as app]
             [clojure.data.json :as json]
             [web-server.core :as ws-core]
+            [clojure.tools.logging :as log]
             (storage.db [account    :as storage-account]
                         [person     :as storage-person]
                         [event      :as storage-event]
@@ -36,4 +37,5 @@
   "Fire off the web server. Main method---port may be listed on command
   line. Otherwise the default 8080 will be used."
   [& args]
-  (ws-core/listen conf (app/create-app conf)))
+  (ws-core/listen conf (app/create-app conf {:info #(log/info %) :error #(log/error %)
+                                             :warn #(log/warn %) :fatal #(log/fatal %)})))

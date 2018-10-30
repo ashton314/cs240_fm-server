@@ -8,16 +8,16 @@
    - `id` Unique ID
    - `username`
    - `password` Stored as a hash
-   - `first-name`
-   - `last-name`
+   - `first_name`
+   - `last_name`
    - `email`
    - `gender` Either `:m` or `:f`
-   - `root-person` ID of Person entity this account maps to
+   - `root_person` ID of Person entity this account maps to
   "
   (:gen-class)
   (:require [fm-app.models.auth-token :as auth-token]))
 
-(defrecord Account [id username password first_name last_name email gender root-person])
+(defrecord Account [id username password first_name last_name email gender root_person])
 
 (defn set-password
   "Sets an account password."

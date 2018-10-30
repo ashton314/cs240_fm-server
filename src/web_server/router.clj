@@ -16,21 +16,20 @@
   (let [matches (keep #(if-let [result (clout/route-matches % request)]
                                     [% result])
                       (keys routing-spec))]
-    (log/info (str "Request: " request))
-    (log/info (str "matches: " [(first matches) (rest matches)]))
     (if (empty? matches)
       (ring-response/not-found (str "The URI " (:uri request) " did not match any routes."))
       ;; TODO: add a try/catch to throw 500 errors
-      (-> ({:register c-register/register-account
-            :login c-login/authenticate
-            :clear c-admin/clear-storage
-            :fill c-people/fill-ancestry
-            :load c-admin/load-record
-            :get-person c-people/get-person
-            :get-all-people c-people/get-people
-            :get-event c-events/get-event
-            :get-all-events c-events/get-all-events} (routing-spec (ffirst matches)))
-          (apply [request (get (first matches) 1) application])))))
+      (let [args [request (get (first matches) 1) application]]
+        (-> ({:register c-register/register-account
+              :login c-login/authenticate
+              :clear c-admin/clear-storage
+              :fill c-people/fill-ancestry
+              :load c-admin/load-record
+              :get-person c-people/get-person
+              :get-all-people c-people/get-people
+              :get-event c-events/get-event
+              :get-all-events c-events/get-all-events} (routing-spec (ffirst matches)))
+            (apply args))))))
 
 (defn parse-uri
   "Parse a URI string and a routing pattern."

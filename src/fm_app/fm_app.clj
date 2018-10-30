@@ -8,6 +8,6 @@
 
 (defn create-app
   "App bootstrapping method---accepts map of storage mechanisms and other dependecies."
-  [config]
-  (fn [& args]      ; Closures!!!
-    config))        ; just return config; I could do other things here
+  [config logger] ; logger should look like {:info #() :error #() :warn #() :fatal #()}
+  {:config config
+   :logger logger})

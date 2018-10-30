@@ -1,6 +1,13 @@
 (ns fm-app.services.admin
   "Administrative services"
-  (:gen-class))
+  (:gen-class)
+  (:require (fm-app.models [account :as account]
+                           [person  :as person]
+                           [auth-token :as token])
+            (fm-app.storage-protocols [account :as account-proto]
+                                      [person :as person-proto]
+                                      [auth-token :as token-proto])))
+            
 
 (defn clear-storage
   "Wipes all records from storage."
@@ -14,3 +21,31 @@
       #_(let [new-id (person-storage/create storage)]
         (person/pack (conj person {:id new-id}))))
   nil)
+
+(defn register
+  "Create a new account"
+  [account-details storage logging]
+  ;; (prn "marker")
+  ;; (prn account-details)
+  ;; (prn storage)
+  ;; (prn logging)
+  ;; ((:info logging) (str "Account details: " account-details))
+  (assert (= #{:username :password :first_name :last_name :email :gender}
+             (into #{} (keys account-details)))
+          (str "field mismatch, should be " #{:username :password :first_name :last_name :email :gender}))
+  ;; TODO: check to make sure username not already taken
+  ;; TODO: check to make sure no datamembers are null
+  (let [new-account (account/unpack account-details)
+        new-id      (account-proto/create! (:account storage))
+        token       (token/generate-token new-id)]
+
+    ;; TODO: abstract this little dance into a macro
+    (let [token-id (token-proto/create! (:auth-token storage))]
+      (token-proto/save! (:auth-token storage) (conj token {:id token-id})))
+
+    (account-proto/save! (:account storage) (conj new-account {:id new-id}))
+    
+    {:auth_token token
+     :username  (:username new-account)
+     :person_id  nil}))
+    
