@@ -33,15 +33,8 @@
 (defn register
   "Create a new account"
   [account-details storage logging]
-  (assert (= #{:username :password :first_name :last_name :email :gender}
-             (into #{} (keys account-details)))
-          (str "field mismatch, should be " #{:username :password :first_name :last_name :email :gender}))
-  (assert (some #{(:gender account-details)} #{:m :f "m" "f" ":m" ":f"})
-          "Gender needs to be defined as a man or a woman")
   (assert (nil? (account-proto/find-username (:account storage) (:username account-details)))
           "Username already in use")
-  (assert (not-any? nil? (vals account-details))
-          "Account details may not be null")
   (let [new-account (account/unpack account-details)
         new-id      (account-proto/create! (:account storage))
         token       (token/generate-token new-id)]
