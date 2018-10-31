@@ -5,10 +5,10 @@
 *** DONE [#A] Finish testing person storage
 *** DONE [#B] Finish testing person model
     Specifically, test the fill function.
-*** TODO Build and test event model
-*** TODO Implement and test storage methods for [1/2]
+*** DONE Build and test event model
+*** DONE Implement and test storage methods for [2/2]
  - [X] AuthToken
- - [ ] Event
+ - [X] Event
 *** DONE generate better fake data
 I've already got the JSON files
 *** TODO Make server listen on port specified on command-line
