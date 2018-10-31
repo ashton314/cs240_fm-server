@@ -7,4 +7,5 @@
   (create! [self] "Returns a new ID for an Person record.")
   (save! [self packed-person] "Saves a packed Person.")
   (fetch [self person-id] "Returns a packed Person record.")
-  (fetch-all [self field value] "Finds all Person records where their fields match a given value."))
+  (fetch-all [self field value] "Finds all Person records where their fields match a given value.")
+  (drop-all! [self] "Drop all records"))

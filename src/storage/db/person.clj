@@ -20,7 +20,10 @@
       (first (jdbc/query db-spec ["SELECT * FROM people WHERE id = ?" person-id])))
 
   (fetch-all [self field value]
-    (jdbc/find-by-keys db-spec field value)))
+    (jdbc/find-by-keys db-spec field value))
+
+  (drop-all! [self]
+      (jdbc/execute! db-spec ["DELETE FROM people"])))
 
 (defn migrate!
   "Creates people table if it doesn't exist."

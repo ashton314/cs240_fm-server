@@ -126,4 +126,8 @@
     (testing "clear functionality"
       (let [clear-resp (mock-request (mock/request :post "/clear"))]
         (is (= 200 (:status clear-resp)))
-        (is (= "Clear succeeded." (:message (json/read-str (:body clear-resp) :key-fn keyword))))))))
+        (is (= "Clear succeeded." (:message (json/read-str (:body clear-resp) :key-fn keyword))))))
+
+    (testing "checking that I got nothing in the db now"
+      (is (nil? (account-proto/find-username (:account (:storage conf))
+                                             (:userName (json/read-str (:body reg_resp) :key-fn keyword))))))))

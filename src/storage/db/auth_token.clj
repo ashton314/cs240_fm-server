@@ -17,7 +17,10 @@
     (jdbc/update! db-spec "auth_tokens" packed-auth-token ["id = ?" (:id packed-auth-token)]))
 
   (fetch [self token-string]
-    (first (jdbc/query db-spec ["SELECT * FROM auth_tokens WHERE token = ?" token-string]))))
+    (first (jdbc/query db-spec ["SELECT * FROM auth_tokens WHERE token = ?" token-string])))
+
+  (drop-all! [self]
+      (jdbc/execute! db-spec ["DELETE FROM auth_tokens"])))
 
 (defn migrate!
   "Creates the accounts table if it doesn't exist."

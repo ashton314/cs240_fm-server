@@ -7,17 +7,23 @@
                            [faker :as faker])
             (fm-app.storage-protocols [account :as account-proto]
                                       [person :as person-proto]
-                                      [auth-token :as token-proto])))
-            
+                                      [auth-token :as token-proto]
+                                      [event :as event-proto])))
 
 (defn clear-storage
   "Wipes all records from storage."
-  [storage-map]
-  nil)
+  [storage logging]
+  (assert (not-any? nil? (vals (select-keys storage [:account :person :auth-token :event])))
+          "Missing storage methods in call to fm-app.services.admin/clear-storage")
+  (do
+    (account-proto/drop-all! (:account storage))
+    (person-proto/drop-all! (:person storage))
+    (token-proto/drop-all! (:auth-token storage))
+    (event-proto/drop-all! (:event storage))))
 
 (defn load-person
   "Wipes all records, then adds a new Person record."
-  [storage person]
+  [person storage logging]
   (do (clear-storage storage)
       #_(let [new-id (person-storage/create storage)]
         (person/pack (conj person {:id new-id}))))
@@ -29,7 +35,7 @@
   `(let [store ~storage
          new-id (~(str prototype "/" "create!") store)]
      (~(str prototype "/" "save!") store (conj packed-obj {:id new-id}))))
-  
+
 (defn register
   "Create a new account"
   [account-details storage logging]
@@ -56,7 +62,7 @@
 
       (doall
        (map #(person-proto/save! (:person storage) %) family))
-    
+
       {:auth_token token
        :username   (:username new-account)
        :person_id  (:id root-person)})))

@@ -26,7 +26,10 @@
     (jdbc/query db-spec ["SELECT * FROM events WHERE owner_id = ?" account]))
 
   (get-person-events [self person]
-    (jdbc/query db-spec ["SELECT * FROM events WHERE person_id = ?" person])))
+    (jdbc/query db-spec ["SELECT * FROM events WHERE person_id = ?" person]))
+
+  (drop-all! [self]
+      (jdbc/execute! db-spec ["DELETE FROM events"])))
   
 (defn migrate!
   "Creates the events table if it doesn't exist."

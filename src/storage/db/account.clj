@@ -23,7 +23,10 @@
       (first (jdbc/query db-spec ["SELECT * FROM accounts WHERE id = ?" account-id])))
 
     (find-username [self username]
-      (first (jdbc/query db-spec ["SELECT * FROM accounts WHERE username = ?" username]))))
+      (first (jdbc/query db-spec ["SELECT * FROM accounts WHERE username = ?" username])))
+
+    (drop-all! [self]
+      (jdbc/execute! db-spec ["DELETE FROM accounts"])))
 
 (defn migrate!
   "Creates the accounts table if it doesn't exist."
