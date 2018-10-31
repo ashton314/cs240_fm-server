@@ -9,6 +9,9 @@
             [web-server.router :as router]
             [fm-app.fm-app :as app]
 
+            (fm-app.models [person :as person]
+                           [account :as account])
+
             (fm-app.storage-protocols [account :as account-proto]
                                       [event :as event-proto]
                                       [person :as person-proto]
@@ -118,7 +121,6 @@
                        :first_name "homsar" :last_name "scruffy"
                        :email "tinfoil@hremail.com" :gender :m})
                      mock-request)]
-    (prn reg_resp)
     (testing "checking that I got a person and stuff in the db"
       (is (not (nil? (account-proto/find-username (:account (:storage conf))
                                                   (:userName (json/read-str (:body reg_resp) :key-fn keyword)))))))
@@ -131,3 +133,40 @@
     (testing "checking that I got nothing in the db now"
       (is (nil? (account-proto/find-username (:account (:storage conf))
                                              (:userName (json/read-str (:body reg_resp) :key-fn keyword))))))))
+
+(deftest fetch-test
+  (let [kirk (str "kirk" (rand-int 100000))
+        spock (str "spock" (rand-int 100000))
+        kirk-data (json/read-str (:body (-> (mock/request :post "/user/register")
+                                            (mock/json-body {:username kirk :password "enterprise" :first_name "James" :last_name "Kirk" :email "kirk@enterprise.ufp" :gender :m})
+                                            mock-request)) :key-fn keyword)
+        spock-data (json/read-str (:body (-> (mock/request :post "/user/register")
+                                             (mock/json-body {:username spock :password "vulcan" :first_name "Mr." :last_name "Spock" :email "spock@enterprise.ufp" :gender :m})
+                                             mock-request)) :key-fn keyword)]
+
+    (testing "fetch mr. spock's person"
+      (let [person-resp (mock-request (mock/header (mock/request :get (str "/people/" (:personID spock-data))) "Authorization" (:authToken spock-data)))]
+        (is (= 200 (:status person-resp)))
+        (is (= (person/unpack {:descendant spock
+                               :personID (:personID spock-data)
+                               :firstName "Mr."
+                               :lastName "Spock"
+                               :gender :m})
+               (person/unpack (select-keys (json/read-str (:body person-resp) :key-fn keyword)
+                                           [:descendant :personID :firstName :lastName :gender]))))))
+
+    (testing "fetch mr. spock's people"
+      (let [people-resp (mock-request (mock/header (mock/request :get "/people") "Authorization" (:authToken spock-data)))]
+        (is (= 200 (:status people-resp)))
+        (is (= 31 (count (:data (json/read-str (:body people-resp) :key-fn keyword)))))))))
+                  
+
+;; (deftest fill-test
+;;   (let [reg_resp (-> (mock/request :post "/user/register")
+;;                      (mock/json-body
+;;                       {:username (str "ender" (rand-int 10000)) :password "the_giant"
+;;                        :first_name "Ender" :last_name "Wiggin"
+;;                        :email "ewiggin@battleschool.if" :gender :m})
+;;                      mock-request)]
+;;     (testing "trying to fill"
+      

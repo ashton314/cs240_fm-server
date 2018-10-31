@@ -16,4 +16,15 @@ I've already got the JSON files
 *** TODO Generate event data on filling a person's tree
 Maybe make the `marry` function also return a new marriage event that I can use.
 
+*** TODO Endpoints to complete [3/3]
+ - [X] /user/register
+ - [X] /user/login
+ - [X] /clear
+ - [ ] /fill/<username>/<generations>
+ - [ ] /load
+ - [ ] /person
+ - [ ] /person/<person_id>
+ - [ ] /event
+ - [ ] /event/<event_id>
+
 ** BUGS
