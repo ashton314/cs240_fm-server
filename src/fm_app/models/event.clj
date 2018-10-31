@@ -37,4 +37,8 @@
 (defn unpack
   "Convert a properly formatted Clojure data structure into an Event record."
   [data]
-  (map->Event data))
+  (map->Event (conj data {:event_type (cond (contains? #{:birth ":birth" "birth"} (:event_type data)) :birth
+                                            (contains? #{:baptism ":baptism" "baptism"} (:event_type data)) :baptism
+                                            (contains? #{:christening ":christening" "christening"} (:event_type data)) :christening
+                                            (contains? #{:marriage ":marriage" "marriage"} (:event_type data)) :marriage
+                                            (contains? #{:death ":death" "death"} (:event_type data)) :death)})))
