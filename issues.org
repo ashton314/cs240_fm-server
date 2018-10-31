@@ -3,15 +3,17 @@
 ** TASKS
 
 *** DONE [#A] Finish testing person storage
-*** TODO [#B] Finish testing person model
+*** DONE [#B] Finish testing person model
     Specifically, test the fill function.
 *** TODO Build and test event model
 *** TODO Implement and test storage methods for [1/2]
  - [X] AuthToken
  - [ ] Event
-*** TODO generate better fake data
+*** DONE generate better fake data
 I've already got the JSON files
 *** TODO Make server listen on port specified on command-line
-*** TODO Figure out logging
+*** DONE Figure out logging
+*** TODO Generate event data on filling a person's tree
+Maybe make the `marry` function also return a new marriage event that I can use.
 
 ** BUGS

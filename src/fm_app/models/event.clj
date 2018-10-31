@@ -22,12 +22,12 @@
 (defn belongs-to?
   "Returns whether or not this Event belongs to a given Person."
   [event person]
-  (= (:person-id event) (:id person)))
+  (= (:person_id event) (:id person)))
 
 (defn owned-by?
   "Returns whether or not this Event is owned by a given Account."
   [event account]
-  (= (:owner-id event) (:id account)))
+  (= (:owner_id event) (:id account)))
 
 (defn pack
   "Change an event into a native Clojure data structure."

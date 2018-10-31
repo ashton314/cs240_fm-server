@@ -107,3 +107,23 @@
             resp (mock-request req)]
         (is (= (:status resp) 401) "successfully returned password error")))))
       
+(deftest clear-test
+  (storage-account/migrate! (:account (:storage conf)))
+  (storage-authy/migrate! (:auth-token (:storage conf)))
+  (storage-person/migrate! (:person (:storage conf)))
+  (storage-event/migrate! (:event (:storage conf)))
+  (let [reg_resp (-> (mock/request :post "/user/register")
+                     (mock/json-body
+                      {:username (str "homsar" (rand-int 10000)) :password "tinfoil"
+                       :first_name "homsar" :last_name "scruffy"
+                       :email "tinfoil@hremail.com" :gender :m})
+                     mock-request)]
+    (prn reg_resp)
+    (testing "checking that I got a person and stuff in the db"
+      (is (not (nil? (account-proto/find-username (:account (:storage conf))
+                                                  (:userName (json/read-str (:body reg_resp) :key-fn keyword)))))))
+
+    (testing "clear functionality"
+      (let [clear-resp (mock-request (mock/request :post "/clear"))]
+        (is (= 200 (:status clear-resp)))
+        (is (= "Clear succeeded." (:message (json/read-str (:body clear-resp) :key-fn keyword))))))))
