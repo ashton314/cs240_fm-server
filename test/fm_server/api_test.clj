@@ -70,5 +70,40 @@
                                              (:authToken (json/read-str (:body resp) :key-fn keyword)))))))
 
       (let [resp (-> (mock/request :post "/user/register") (mock/json-body deets) mock-request)]
-        (prn resp)
         (is (= (:status resp) 409) "caught resource already in use")))))
+
+(deftest login-test
+  (storage-account/migrate! (:account (:storage conf)))
+  (storage-authy/migrate! (:auth-token (:storage conf)))
+  (storage-person/migrate! (:person (:storage conf)))
+
+  (let [deets {:username (str "homsar" (rand-int 10000))
+               :password "tinfoil"
+               :first_name "homsar"
+               :last_name "scruffy"
+               :email "tinfoil@hremail.com"
+               :gender :m}
+        req (-> (mock/request :post "/user/register")
+                (mock/json-body deets))]
+
+    (testing "authentication test"
+      (let [register-resp (mock-request req)
+            req (-> (mock/request :post "/user/login")
+                    (mock/json-body {:userName (:username deets)
+                                     :password (:password deets)}))
+            resp (mock-request req)
+            resp-body (json/read-str (:body resp) :key-fn keyword)]
+        (is (= (:status resp) 200))
+        (is (not-empty (:authToken resp-body)) "got some auth token back")
+        (is (= (:userName resp-body) (:username deets)) "got username back")
+        (is (= (:personID resp-body)
+               (:personID (json/read-str (:body register-resp) :key-fn keyword)))
+            "right personID back from reg")))
+
+    (testing "failed auth test"
+      (let [req (-> (mock/request :post "/user/login")
+                    (mock/json-body {:userName (:username deets)
+                                     :password "bad_password"}))
+            resp (mock-request req)]
+        (is (= (:status resp) 401) "successfully returned password error")))))
+      

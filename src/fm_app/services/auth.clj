@@ -9,13 +9,17 @@
             [fm-app.storage-protocols.person :as person-proto]
             [fm-app.storage-protocols.auth-token :as token-proto]))
 
+(defn find-account
+  "Returns an Account record given a username, or nil."
+  [storage logger username]
+  (if-let [account (account-proto/find-username storage username)]
+    (account/unpack account)))
+  
 (defn authenticate
   "Takes a username and a password. Returns an AuthToken if password is good."
-  [storage username passwd]
-  (if-let [account (account-proto/find-username storage username)]
-    (-> account
-        account/unpack
-        (account/authenticate passwd))))
+  [storage logger username passwd]
+  (if-let [account (find-account storage logger username)]
+    (account/authenticate account passwd)))
 
 (defn revoke-token
   "Revokes an AuthToken."

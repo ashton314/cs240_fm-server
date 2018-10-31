@@ -43,7 +43,6 @@
     (let [token-id (token-proto/create! (:auth-token storage))]
       (token-proto/save! (:auth-token storage) (conj token {:id token-id})))
 
-    (account-proto/save! (:account storage) (conj new-account {:id new-id}))
 
     (let [root-person (person/unpack {:first_name (:first_name account-details)
                                       :last_name (:last_name account-details)
@@ -52,6 +51,9 @@
                                       :owner_id new-id})
 
           family (person/populate-ancestry root-person 4 faker/gen-name #(person-proto/create! (:person storage)))]
+
+      (account-proto/save! (:account storage) (conj new-account {:id new-id :root_person (:id root-person)}))
+
       (doall
        (map #(person-proto/save! (:person storage) %) family))
     
