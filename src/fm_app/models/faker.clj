@@ -25,6 +25,22 @@
   (rand-nth [:birth :baptism :christening :marriage :death]))
 
 (defn gen-year
-  "Generates random year in the past"
+  "Generates random year in the past 400 years"
   []
   (+ 1600 (rand-int 400)))
+
+(defn gen-month
+  "Generates a month number"
+  []
+  (+ 1 (rand-int 13)))
+
+(defn gen-day
+  "Generates a safe day (i.e. 1-28)"
+  []
+  (+ 1 (rand-int 29)))
+
+(defn gen-timestamp
+  "Generates a timestamp in the form YYYY-MM-DD"
+  []
+  (format "%04d-%02d-%02d" (gen-year) (gen-month) (gen-day)))
+
