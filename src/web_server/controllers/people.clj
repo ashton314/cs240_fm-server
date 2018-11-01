@@ -3,6 +3,7 @@
   (:gen-class)
   (:require [ring.util.response :as ring-response]
             [clojure.tools.logging :as log]
+            [clojure.data.json :as json]
             (fm-app.services [auth :as auth]
                              [people :as people])))
 
@@ -16,9 +17,45 @@
 (defn get-person
   "Gets a Person Record specified by ID"
   [request params app]
-  ((:info (:logger app)) (str "People controller got: " request))
-  ((:info (:logger app)) (str "Params: " params "\nApp: " app))
-  nil)
+  (if-let [account (auth/find-account-by-token (:storage (:config app)) (:logger app)
+                                               ((:headers request) "authorization"))]
+    (try
+      (let [person (people/get-person (:person (:storage (:config app))) (:logger app)
+                                         (:person_id params))]
+        (if (and person (= (:owner_id person) (:id account)))
+          (-> {:personID (:id person)     ; person found
+               :firstName (:first_name person)
+               :lastName (:last_name person)
+               :gender (:gender person)
+               :father (:father person)
+               :mother (:mother person)
+               :spouse (:spouse person)
+               :descendant (:username account)}
+              json/write-str
+              ring-response/response
+              (ring-response/content-type "application/json")
+              (ring-response/status 200))
+          (-> {:message "Not found."}     ; person not found, but auth good
+              json/write-str
+              ring-response/response
+              (ring-response/content-type "application/json")
+              (ring-response/status 404))))
+      (catch Error e
+        (let [message (.getMessage e)]
+          ((:error (:logger app)) (str "Problem finding person: " message))
+          ((:error (:logger app)) (str "Request object: " request))
+          (-> {:message "Server error."}
+              json/write-str
+              ring-response/response
+              (ring-response/content-type "application/json")
+              (ring-response/status 500)))))
+    (-> {:message "Not authorized."}
+        json/write-str
+        ring-response/response
+        (ring-response/content-type "application/json")
+        (ring-response/status 500))))
+            
+    
 
 (defn get-people
   "Gets all People for the current user"

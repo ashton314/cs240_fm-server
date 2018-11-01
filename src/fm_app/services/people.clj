@@ -11,10 +11,12 @@
 
 (defn get-person
   "Gets a Person record specified by ID"
-  [storage logger id]
-  nil)
+  [person-storage logger id]
+  (if-let [person (person-proto/fetch person-storage id)]
+    (person/unpack person)))
 
 (defn lookup-person
   "Finds and returns a Person record(s) that match a set of attributes"
-  [attrs]
-  nil)
+  [person-storage logger key val]
+  (if-let [people (person-proto/fetch-all person-storage key val)]
+    (map person/unpack people)))
