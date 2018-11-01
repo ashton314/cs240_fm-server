@@ -9,4 +9,5 @@
   (fetch [self event-id] "Returns a packed Event record.")
   (get-user-events [self account] "Gets Events for a given user.")
   (get-person-events [self person] "Gets Events for a given person.")
+  (drop-by-owner! [self owner-id] "Drops all records with a given account id.")
   (drop-all! [self] "Drop all records"))

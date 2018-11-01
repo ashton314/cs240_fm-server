@@ -28,6 +28,9 @@
   (get-person-events [self person]
     (jdbc/query db-spec ["SELECT * FROM events WHERE person_id = ?" person]))
 
+  (drop-by-owner! [self owner-id]
+    (jdbc/execute! db-spec ["DELETE FROM events WHERE owner_id = ?" owner-id]))
+
   (drop-all! [self]
       (jdbc/execute! db-spec ["DELETE FROM events"])))
   

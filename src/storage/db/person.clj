@@ -22,6 +22,9 @@
   (fetch-all [self field value]
     (jdbc/find-by-keys db-spec "people" {field value}))
 
+  (drop-by-owner! [self owner-id]
+    (jdbc/execute! db-spec ["DELETE FROM people WHERE owner_id = ?" owner-id]))
+
   (drop-all! [self]
       (jdbc/execute! db-spec ["DELETE FROM people"])))
 

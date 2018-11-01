@@ -1,5 +1,6 @@
 (ns fm-server.api-test
   (:require [clojure.test :refer :all]
+            [clojure.set :as set]
             [clojure.java.io :as io]
             [ring.mock.request :as mock]
 
@@ -41,6 +42,7 @@
             "/user/login" :login
             "/clear" :clear
             "/fill/:username/:generations" :fill
+            "/fill/:username" :fill-4-gens
             "/load" :load
             "/person/:person_id" :get-person
             "/person" :get-all-people
@@ -187,12 +189,46 @@
       (let [event-resp (mock-request (mock/header (mock/request :get "/event") "Authorization" "not-an-auth-token"))]
         (is (= 401 (:status event-resp)))))))
 
-;; (deftest fill-test
-;;   (let [reg_resp (-> (mock/request :post "/user/register")
-;;                      (mock/json-body
-;;                       {:username (str "ender" (rand-int 10000)) :password "the_giant"
-;;                        :first_name "Ender" :last_name "Wiggin"
-;;                        :email "ewiggin@battleschool.if" :gender :m})
-;;                      mock-request)]
-;;     (testing "trying to fill"
-      
+(deftest fill-test
+  (let [ender (str "ender" (rand-int 10000))
+        reg-resp (-> (mock/request :post "/user/register")
+                     (mock/json-body
+                      {:username ender :password "the_giant"
+                       :first_name "Ender" :last_name "Wiggin"
+                       :email "ewiggin@battleschool.if" :gender :m})
+                     mock-request)
+        ender-data (json/read-str (:body reg-resp) :key-fn keyword)]
+
+    (testing "registration went well"
+      (is (= (:status reg-resp) 201)))
+
+    (let [family-resp (mock-request (mock/header (mock/request :get "/person")
+                                                 "Authorization" (:authToken ender-data)))
+          family (:data (json/read-str (:body family-resp) :key-fn keyword))
+
+          events-resp (mock-request (mock/header (mock/request :get "/event")
+                                                 "Authorization" (:authToken ender-data)))
+          events (:data (json/read-str (:body events-resp) :key-fn keyword))]
+
+      (testing "fill should wipe out old data"
+
+        (let [fill-resp (mock-request (mock/request :post (str "/fill/" ender "/4")))]
+          (is (= (:status fill-resp) 200))
+          (is (= (:message (json/read-str (:body fill-resp) :key-fn keyword)) "Successfully added 31 persons and 76 events to the database.")))
+
+        (let [new-auth-req (-> (mock/request :post "/user/login")
+                               (mock/json-body {:userName ender
+                                                :password "the_giant"})
+                               mock-request)
+              new-auth-token (:authToken (json/read-str (:body new-auth-req) :key-fn keyword))
+              new-family-resp (mock-request (mock/header (mock/request :get "/person")
+                                                         "Authorization" new-auth-token))
+              new-family (:data (json/read-str (:body new-family-resp) :key-fn keyword))
+
+              new-events-resp (mock-request (mock/header (mock/request :get "/event")
+                                                         "Authorization" new-auth-token))
+              new-events (:data (json/read-str (:body new-events-resp) :key-fn keyword))]
+          (is (= (count new-family) 31))
+          (is (= (count new-events) 76))
+          (is (= (count (set/intersection (into #{} new-family) (into #{} family))) 0))
+          (is (= (count (set/intersection (into #{} new-events) (into #{} events))) 0)))))))

@@ -16,12 +16,14 @@ I've already got the JSON files
 *** TODO Be sensitive to request types (e.g. differentiate GET from POST)
 *** DONE Generate event data on filling a person's tree
 Maybe make the `marry` function also return a new marriage event that I can use.
+*** DONE Number of generations in fill should be optional
+*** TODO More input validation (e.g. non-negative generations, etc.)
 
-*** TODO Endpoints to complete [7/9]
+*** TODO Endpoints to complete [8/9]
  - [X] /user/register
  - [X] /user/login
  - [X] /clear
- - [ ] /fill/<username>/<generations>
+ - [X] /fill/<username>/<generations>
  - [ ] /load
  - [X] /person
  - [X] /person/<person_id>

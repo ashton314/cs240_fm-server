@@ -27,6 +27,7 @@
             "/user/login" :login
             "/clear" :clear
             "/fill/:username/:generations" :fill
+            "/fill/:username" :fill-4-gens
             "/load" :load
             "/person/:person_id" :get-person
             "/person" :get-all-people

@@ -8,4 +8,5 @@
   (save! [self packed-person] "Saves a packed Person.")
   (fetch [self person-id] "Returns a packed Person record.")
   (fetch-all [self field value] "Finds all Person records where their fields match a given value.")
+  (drop-by-owner! [self owner-id] "Drops all records with a given account id.")
   (drop-all! [self] "Drop all records"))

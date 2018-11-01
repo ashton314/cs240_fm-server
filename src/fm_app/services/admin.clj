@@ -21,38 +21,54 @@
     (token-proto/drop-all! (:auth-token storage))
     (event-proto/drop-all! (:event storage))))
 
-(defn load-person
-  "Wipes all records, then adds a new Person record."
-  [person storage logging]
-  (do (clear-storage storage)
-      #_(let [new-id (person-storage/create storage)]
-        (person/pack (conj person {:id new-id}))))
-  nil)
+(defn clear-account
+  "Wipes all records associated with an account."
+  [account storage logging]
+  (person-proto/drop-by-owner! (:person storage) (:id account))
+  (token-proto/drop-by-owner! (:auth-token storage) (:id account))
+  (event-proto/drop-by-owner! (:event storage) (:id account)))
 
-#_(defmacro with-new
-  "Creates a new instance of a thingy and returns [id obj]"
-  [prototype storage packed-obj]
-  `(let [store ~storage
-         new-id (~(str prototype "/" "create!") store)]
-     (~(str prototype "/" "save!") store (conj packed-obj {:id new-id}))))
+(defn fill-account
+  [account generations storage logging]
+  (let [root-person (person/unpack {:first_name (:first_name account)
+                                    :last_name (:last_name account)
+                                    :gender (:gender account)
+                                    :id (person-proto/create! (:person storage))
+                                    :owner_id (:id account)})
+
+        family (person/populate-ancestry root-person generations faker/gen-name #(person-proto/create! (:person storage)))
+        events (->> (person/make-events (first family) family 1990 #(event-proto/create! (:event storage)) faker/gen-location faker/gen-timestamp-from-year)
+                    (filter (complement #(and (= (:person_id %) (:id root-person)) (= (:event_type %) :death)))))] ; all the events *EXCEPT* the death of the current root person
+
+
+    (account-proto/save! (:account storage) (conj account {:root_person (:id root-person)}))
+
+    (doall
+     (map #(person-proto/save! (:person storage) %) family))
+
+    (doall
+     (map #(event-proto/save! (:event storage) %)
+          events))
+
+    {:people family
+     :events events}))
 
 (defn register
   "Create a new account"
-  [account-details storage logging]
-  (assert (nil? (account-proto/find-username (:account storage) (:username account-details)))
+  [account storage logging]
+  (assert (nil? (account-proto/find-username (:account storage) (:username account)))
           "Username already in use")
-  (let [new-account (account/unpack account-details)
+  (let [new-account (account/unpack account)
         new-id      (account-proto/create! (:account storage))
         token       (token/generate-token new-id)]
 
-    ;; TODO: abstract this little dance into a macro
     (let [token-id (token-proto/create! (:auth-token storage))]
       (token-proto/save! (:auth-token storage) (conj token {:id token-id})))
 
 
-    (let [root-person (person/unpack {:first_name (:first_name account-details)
-                                      :last_name (:last_name account-details)
-                                      :gender (:gender account-details)
+    (let [root-person (person/unpack {:first_name (:first_name account)
+                                      :last_name (:last_name account)
+                                      :gender (:gender account)
                                       :id (person-proto/create! (:person storage))
                                       :owner_id new-id})
 
@@ -65,7 +81,7 @@
        (map #(person-proto/save! (:person storage) %) family))
 
       (doall
-       (map #(event-proto/save! (:event storage) %)
+       (map #(event-proto/save! (:event storage) %) ; save all the events *EXCEPT* the death of the current root person
             (filter (complement #(and (= (:person_id %) (:id root-person)) (= (:event_type %) :death))) events)))
 
       {:auth_token token

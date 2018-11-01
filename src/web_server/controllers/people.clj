@@ -5,14 +5,46 @@
             [clojure.tools.logging :as log]
             [clojure.data.json :as json]
             (fm-app.services [auth :as auth]
+                             [admin :as admin]
                              [people :as people])))
 
 (defn fill-ancestry
-  "Populates the server's database with generated data for the specified user name."
+  "Populates the server's database with generated data for the specified username."
   [request params app]
-  ((:info (:logger app)) (str "People controller got: " request))
-  ((:info (:logger app)) (str "Params: " params "\nApp: " app))
-  (ring-response/response "fill-ancestry hit!"))
+  ((:info (:logger app))
+   (str "Request do fill user " (:username params) " " (:generations params) " generations"))
+  (->
+   (if-let [account (auth/find-account (:account (:storage (:config app))) (:logger app)
+                                       (:username params))]
+     (try
+       (do
+         (admin/clear-account account (:storage (:config app)) (:logger app))
+         (let [{people :people
+                events :events} (admin/fill-account account (read-string (:generations params))
+                                                    (:storage (:config app)) (:logger app))]
+           (-> {:message (str "Successfully added " (count people) " persons and " (count events)
+                              " events to the database.")}
+               json/write-str
+               ring-response/response
+               (ring-response/status 200))))
+       (catch Error e
+         (let [message (.getMessage e)]
+           ((:error (:logger app)) (str "Problem finding event: " message))
+           ((:error (:logger app)) (str "Request object: " request))
+           (-> {:message "Server error."}
+               json/write-str
+               ring-response/response
+               (ring-response/status 500)))))
+     (-> {:message "Username not found."}
+         json/write-str
+         ring-response/response
+         (ring-response/status 404)))
+   (ring-response/content-type "application/json")))
+
+(defn fill-ancestry-default
+  "Populates the default 4 generations for a specified username."
+  [request params app]
+  (fill-ancestry request (conj params {:generations "4"}) app))
 
 (defn get-person
   "Gets a Person Record specified by ID"

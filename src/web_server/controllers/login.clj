@@ -18,7 +18,7 @@
       error-resp
       (do
         ((:info (:logger app)) (str "Authentication request for " (:userName req-body)))
-        (let [token (auth/authenticate (:account (:storage (:config app))) (:logger app)
+        (let [token (auth/authenticate (:storage (:config app)) (:logger app)
                                        (:userName req-body) (:password req-body))
               account (auth/find-account (:account (:storage (:config app))) (:logger app) (:userName req-body))]
           (if token

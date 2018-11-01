@@ -24,6 +24,7 @@
               :login c-login/authenticate
               :clear c-admin/clear-storage
               :fill c-people/fill-ancestry
+              :fill-4-gens c-people/fill-ancestry-default
               :load c-admin/load-record
               :get-person c-people/get-person
               :get-all-people c-people/get-people

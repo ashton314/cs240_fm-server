@@ -30,8 +30,13 @@
 (defn authenticate
   "Takes a username and a password. Returns an AuthToken if password is good."
   [storage logger username passwd]
-  (if-let [account (find-account storage logger username)]
-    (account/authenticate account passwd)))
+  (if-let [account (find-account (:account storage) logger username)]
+    (if-let [token (account/authenticate account passwd)]
+      (do (token-proto/save! (:auth-token storage) (conj token
+                                                         {:id (token-proto/create!
+                                                               (:auth-token storage))}))
+                                                         
+          token))))
 
 (defn revoke-token
   "Revokes an AuthToken."

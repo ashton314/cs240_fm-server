@@ -19,6 +19,9 @@
   (fetch [self token-string]
     (first (jdbc/query db-spec ["SELECT * FROM auth_tokens WHERE token = ?" token-string])))
 
+  (drop-by-owner! [self owner-id]
+    (jdbc/execute! db-spec ["DELETE FROM auth_tokens WHERE owner_id = ?" owner-id]))
+
   (drop-all! [self]
       (jdbc/execute! db-spec ["DELETE FROM auth_tokens"])))
 
