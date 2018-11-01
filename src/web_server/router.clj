@@ -4,6 +4,7 @@
   (:require [clout.core :as clout]
             [ring.util.response :as ring-response]
             [clojure.tools.logging :as log]
+            [clojure.data.json :as json]
             (web-server.controllers [register :as c-register]
                                     [admin :as c-admin]
                                     [events :as c-events]
@@ -18,7 +19,7 @@
                                     [% result])
                       (keys routing-spec))]
     (if (empty? matches)
-      (ring-response/not-found (str "The URI " (:uri request) " did not match any routes."))
+      (ring-response/not-found (json/write-str {:message (str "The URI " (:uri request) " did not match any routes.")}))
       ;; TODO: add a try/catch to throw 500 errors
       (let [args [request (get (first matches) 1) application]]
         (-> ({:register c-register/register-account

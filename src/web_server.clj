@@ -24,15 +24,25 @@
              :auth-token (storage-authy/map->AuthTokenDbStorage {:db-spec (db-spec-default)})}
    :server  {:port 8080}
    :routes {"/user/register" :register
+            "/user/register/" :register
             "/user/login" :login
+            "/user/login/" :login
             "/clear" :clear
+            "/clear/" :clear
             "/fill/:username/:generations" :fill
+            "/fill/:username/:generations/" :fill
             "/fill/:username" :fill-4-gens
+            "/fill/:username/" :fill-4-gens
             "/load" :load
+            "/load/" :load
             "/person/:person_id" :get-person
+            "/person/:person_id/" :get-person
             "/person" :get-all-people
+            "/person/" :get-all-people
             "/event/:event_id" :get-event
+            "/event/:event_id/" :get-event
             "/event" :get-all-events
+            "/event/" :get-all-events
             "/index.html" :home-page
             "/css/:filename" :css
             "/favicon.ico" :favicon}})
