@@ -45,7 +45,7 @@
             "/person/:person_id" :get-person
             "/person" :get-all-people
             "/event/:event_id" :get-event
-            "/event/" :get-all-events}})
+            "/event" :get-all-events}})
 
 (defn mock-request
   [req]
@@ -175,8 +175,17 @@
     (testing "fetching mr. spock's events"
       (let [event-resp (mock-request (mock/header (mock/request :get "/event") "Authorization" (:authToken spock-data)))]
         (is (= 200 (:status event-resp)))
-        (is (= 91 (count (:data (json/read-str (:body event-resp) :key-fn keyword)))))))))
-                  
+        (is (= 76 (count (:data (json/read-str (:body event-resp) :key-fn keyword)))))))
+    
+    (testing "fetching an event for mr. spock"
+      (let [all-events-resp (mock-request (mock/header (mock/request :get "/event") "Authorization" (:authToken spock-data)))
+            all-events (:data (json/read-str (:body all-events-resp) :key-fn keyword))
+            event-resp (mock-request (mock/header (mock/request :get (str "/event/" (:eventID (first all-events)))) "Authorization" (:authToken spock-data)))]
+        (is (= 200 (:status event-resp)))))
+
+    (testing "kirk tries to access with a bad auth token"
+      (let [event-resp (mock-request (mock/header (mock/request :get "/event") "Authorization" "not-an-auth-token"))]
+        (is (= 401 (:status event-resp)))))))
 
 ;; (deftest fill-test
 ;;   (let [reg_resp (-> (mock/request :post "/user/register")

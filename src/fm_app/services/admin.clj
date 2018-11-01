@@ -56,12 +56,17 @@
                                       :id (person-proto/create! (:person storage))
                                       :owner_id new-id})
 
-          family (person/populate-ancestry root-person 4 faker/gen-name #(person-proto/create! (:person storage)))]
+          family (person/populate-ancestry root-person 4 faker/gen-name #(person-proto/create! (:person storage)))
+          events (person/make-events (first family) family 1990 #(event-proto/create! (:event storage)) faker/gen-location faker/gen-timestamp-from-year)]
 
       (account-proto/save! (:account storage) (conj new-account {:id new-id :root_person (:id root-person)}))
 
       (doall
        (map #(person-proto/save! (:person storage) %) family))
+
+      (doall
+       (map #(event-proto/save! (:event storage) %)
+            (filter (complement #(and (= (:person_id %) (:id root-person)) (= (:event_type %) :death))) events)))
 
       {:auth_token token
        :username   (:username new-account)

@@ -45,7 +45,7 @@
      (-> {:message "Not authorized."}
          json/write-str
          ring-response/response
-         (ring-response/status 500)))
+         (ring-response/status 401)))
    (ring-response/content-type "application/json")))
 
 (defn get-all-events
@@ -85,5 +85,5 @@
      (-> {:message "Not authorized."}
          json/write-str
          ring-response/response
-         (ring-response/status 500)))
+         (ring-response/status 401)))
    (ring-response/content-type "application/json")))

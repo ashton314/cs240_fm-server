@@ -31,7 +31,7 @@
             "/person/:person_id" :get-person
             "/person" :get-all-people
             "/event/:event_id" :get-event
-            "/event/" :get-all-events}})
+            "/event" :get-all-events}})
 
 (defn -main
   "Fire off the web server. Main method---port may be listed on command
