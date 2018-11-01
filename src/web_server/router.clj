@@ -8,6 +8,7 @@
                                     [admin :as c-admin]
                                     [events :as c-events]
                                     [login :as c-login]
+                                    [resources :as c-resources]
                                     [people :as c-people])))
 
 (defn handle-request
@@ -29,7 +30,10 @@
               :get-person c-people/get-person
               :get-all-people c-people/get-people
               :get-event c-events/get-event
-              :get-all-events c-events/get-all-events} (routing-spec (ffirst matches)))
+              :get-all-events c-events/get-all-events
+              :home-page c-resources/render
+              :css c-resources/render-css
+              :favicon c-resources/render-favicon} (routing-spec (ffirst matches)))
             (apply args))))))
 
 (defn parse-uri

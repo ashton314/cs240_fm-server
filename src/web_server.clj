@@ -32,7 +32,10 @@
             "/person/:person_id" :get-person
             "/person" :get-all-people
             "/event/:event_id" :get-event
-            "/event" :get-all-events}})
+            "/event" :get-all-events
+            "/index.html" :home-page
+            "/css/:filename" :css
+            "/favicon.ico" :favicon}})
 
 (defn -main
   "Fire off the web server. Main method---port may be listed on command
