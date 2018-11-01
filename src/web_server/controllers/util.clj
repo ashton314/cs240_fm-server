@@ -1,7 +1,8 @@
 (ns web-server.controllers.util
   "General utilities for controllers (e.g. validation)"
   (:gen-class)
-  (:require [ring.util.response :as ring-response]))
+  (:require [ring.util.response :as ring-response]
+            [clojure.data.json :as json]))
 
 (defmacro validate
   "Given a vector of clauses like [condition error-code message], tests
@@ -11,6 +12,7 @@
   ([& clauses]
    (let [[test err-code message] (first clauses)]
      `(if ~test (validate ~@(rest clauses))
-          (-> ~message
+          (-> {:message ~message}
+              json/write-str
               ring-response/bad-request
               (ring-response/status ~err-code))))))

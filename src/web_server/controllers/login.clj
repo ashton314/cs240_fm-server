@@ -14,7 +14,7 @@
   (let [req-body (json/read-str (ring-request/body-string request) :key-fn keyword)]
     (if-let [error-resp (validate
                          [(not-any? nil? (map #(req-body %) [:userName :password]))
-                          400 "Missing parameters"])]
+                          400 "Missing parameters: need 'userName' and 'password'"])]
       error-resp
       (do
         ((:info (:logger app)) (str "Authentication request for " (:userName req-body)))
@@ -29,7 +29,8 @@
                 ring-response/response
                 (ring-response/content-type "application/json")
                 (ring-response/status 200))
-            (-> "Invalid username/password pair"
+            (-> {:message "Invalid username/password pair"}
+                json/write-str
                 ring-response/response
                 (ring-response/status 401))))))))
             

@@ -32,4 +32,4 @@
   [request params app]
   (log/info (str "Admin controller got: " request))
   (log/info (str "Params: " params "\nApp: " app))
-  (ring-response/response "load-record hit!"))
+  (ring-response/response (json/write-str {:message "load-record hit!"})))

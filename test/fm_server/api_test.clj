@@ -61,10 +61,10 @@
   (storage-authy/migrate! (:auth-token (:storage conf)))
   (storage-person/migrate! (:person (:storage conf)))
   (testing "register-a-homstar"
-    (let [deets {:username (str "homsar" (rand-int 10000))
+    (let [deets {:userName (str "homsar" (rand-int 10000))
                  :password "tinfoil"
-                 :first_name "homsar"
-                 :last_name "scruff"
+                 :firstName "homsar"
+                 :lastName "scruff"
                  :email "tinfoil@hremail.com"
                  :gender :m}
           req (-> (mock/request :post "/user/register")
@@ -72,7 +72,7 @@
       (let [resp (mock-request req)]
         (is (= (:status resp) 201) "got ok back")
         (is (= (:id (account-proto/find-username (:account (:storage conf))
-                                                 (:username deets)))
+                                                 (:userName deets)))
                (:owner_id (auth-token-proto/fetch (:auth-token (:storage conf))
                                              (:authToken (json/read-str (:body resp) :key-fn keyword)))))))
 
@@ -84,10 +84,10 @@
   (storage-authy/migrate! (:auth-token (:storage conf)))
   (storage-person/migrate! (:person (:storage conf)))
 
-  (let [deets {:username (str "homsar" (rand-int 10000))
+  (let [deets {:userName (str "homsar" (rand-int 10000))
                :password "tinfoil"
-               :first_name "homsar"
-               :last_name "scruffy"
+               :firstName "homsar"
+               :lastName "scruffy"
                :email "tinfoil@hremail.com"
                :gender :m}
         req (-> (mock/request :post "/user/register")
@@ -96,20 +96,20 @@
     (testing "authentication test"
       (let [register-resp (mock-request req)
             req (-> (mock/request :post "/user/login")
-                    (mock/json-body {:userName (:username deets)
+                    (mock/json-body {:userName (:userName deets)
                                      :password (:password deets)}))
             resp (mock-request req)
             resp-body (json/read-str (:body resp) :key-fn keyword)]
         (is (= (:status resp) 200))
         (is (not-empty (:authToken resp-body)) "got some auth token back")
-        (is (= (:userName resp-body) (:username deets)) "got username back")
+        (is (= (:userName resp-body) (:userName deets)) "got username back")
         (is (= (:personID resp-body)
                (:personID (json/read-str (:body register-resp) :key-fn keyword)))
             "right personID back from reg")))
 
     (testing "failed auth test"
       (let [req (-> (mock/request :post "/user/login")
-                    (mock/json-body {:userName (:username deets)
+                    (mock/json-body {:userName (:userName deets)
                                      :password "bad_password"}))
             resp (mock-request req)]
         (is (= (:status resp) 401) "successfully returned password error")))))
@@ -121,8 +121,8 @@
   (storage-event/migrate! (:event (:storage conf)))
   (let [reg_resp (-> (mock/request :post "/user/register")
                      (mock/json-body
-                      {:username (str "homsar" (rand-int 10000)) :password "tinfoil"
-                       :first_name "homsar" :last_name "scruffy"
+                      {:userName (str "homsar" (rand-int 10000)) :password "tinfoil"
+                       :firstName "homsar" :lastName "scruffy"
                        :email "tinfoil@hremail.com" :gender :m})
                      mock-request)]
     (testing "checking that I got a person and stuff in the db"
@@ -146,10 +146,10 @@
   (let [kirk (str "kirk" (rand-int 100000))
         spock (str "spock" (rand-int 100000))
         kirk-data (json/read-str (:body (-> (mock/request :post "/user/register")
-                                            (mock/json-body {:username kirk :password "enterprise" :first_name "James" :last_name "Kirk" :email "kirk@enterprise.ufp" :gender :m})
+                                            (mock/json-body {:userName kirk :password "enterprise" :firstName "James" :lastName "Kirk" :email "kirk@enterprise.ufp" :gender :m})
                                             mock-request)) :key-fn keyword)
         spock-data (json/read-str (:body (-> (mock/request :post "/user/register")
-                                             (mock/json-body {:username spock :password "vulcan" :first_name "Mr." :last_name "Spock" :email "spock@enterprise.ufp" :gender :m})
+                                             (mock/json-body {:userName spock :password "vulcan" :firstName "Mr." :lastName "Spock" :email "spock@enterprise.ufp" :gender :m})
                                              mock-request)) :key-fn keyword)]
 
     (testing "fetching mr. spock's account by token"
@@ -193,8 +193,8 @@
   (let [ender (str "ender" (rand-int 10000))
         reg-resp (-> (mock/request :post "/user/register")
                      (mock/json-body
-                      {:username ender :password "the_giant"
-                       :first_name "Ender" :last_name "Wiggin"
+                      {:userName ender :password "the_giant"
+                       :firstName "Ender" :lastName "Wiggin"
                        :email "ewiggin@battleschool.if" :gender :m})
                      mock-request)
         ender-data (json/read-str (:body reg-resp) :key-fn keyword)]
