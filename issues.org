@@ -14,10 +14,10 @@ I've already got the JSON files
 *** DONE Figure out logging
 *** TODO Make server listen on port specified on command-line
 *** TODO Be sensitive to request types (e.g. differentiate GET from POST)
-*** TODO Generate event data on filling a person's tree
+*** DONE Generate event data on filling a person's tree
 Maybe make the `marry` function also return a new marriage event that I can use.
 
-*** TODO Endpoints to complete [5/9]
+*** TODO Endpoints to complete [7/9]
  - [X] /user/register
  - [X] /user/login
  - [X] /clear
@@ -25,7 +25,7 @@ Maybe make the `marry` function also return a new marriage event that I can use.
  - [ ] /load
  - [X] /person
  - [X] /person/<person_id>
- - [ ] /event
- - [ ] /event/<event_id>
+ - [X] /event
+ - [X] /event/<event_id>
 
 ** BUGS
