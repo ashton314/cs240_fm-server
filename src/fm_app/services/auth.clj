@@ -11,10 +11,22 @@
 
 (defn find-account
   "Returns an Account record given a username, or nil."
-  [storage logger username]
-  (if-let [account (account-proto/find-username storage username)]
+  [account-storage logger username]
+  (if-let [account (account-proto/find-username account-storage username)]
     (account/unpack account)))
-  
+
+(defn find-token
+  [storage logger token]
+  (if-let [token (token-proto/fetch storage token)]
+    (token/unpack token)))
+
+(defn find-account-by-token
+  "Retrieve an account by token."
+  [storage logger token]
+  (if-let [token (find-token (:auth-token storage) logger token)]
+    (if-let [account (account-proto/fetch (:account storage) (:account_id token))]
+      (account/unpack account))))
+
 (defn authenticate
   "Takes a username and a password. Returns an AuthToken if password is good."
   [storage logger username passwd]

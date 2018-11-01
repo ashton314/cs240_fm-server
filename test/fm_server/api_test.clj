@@ -9,6 +9,8 @@
             [web-server.router :as router]
             [fm-app.fm-app :as app]
 
+            (fm-app.services [auth :as auth-service])
+
             (fm-app.models [person :as person]
                            [account :as account])
 
@@ -144,8 +146,13 @@
                                              (mock/json-body {:username spock :password "vulcan" :first_name "Mr." :last_name "Spock" :email "spock@enterprise.ufp" :gender :m})
                                              mock-request)) :key-fn keyword)]
 
+    (testing "fetching mr. spock's account by token"
+      (is (not (nil? (auth-service/find-account (:account (:storage conf)) nil spock))))
+      (is (= (auth-service/find-account (:account (:storage conf)) nil spock)
+             (auth-service/find-account-by-token (:storage conf) nil (:authToken spock-data)))))
+
     (testing "fetch mr. spock's person"
-      (let [person-resp (mock-request (mock/header (mock/request :get (str "/people/" (:personID spock-data))) "Authorization" (:authToken spock-data)))]
+      (let [person-resp (mock-request (mock/header (mock/request :get (str "/person/" (:personID spock-data))) "Authorization" (:authToken spock-data)))]
         (is (= 200 (:status person-resp)))
         (is (= (person/unpack {:descendant spock
                                :personID (:personID spock-data)
@@ -156,7 +163,7 @@
                                            [:descendant :personID :firstName :lastName :gender]))))))
 
     (testing "fetch mr. spock's people"
-      (let [people-resp (mock-request (mock/header (mock/request :get "/people") "Authorization" (:authToken spock-data)))]
+      (let [people-resp (mock-request (mock/header (mock/request :get "/person") "Authorization" (:authToken spock-data)))]
         (is (= 200 (:status people-resp)))
         (is (= 31 (count (:data (json/read-str (:body people-resp) :key-fn keyword)))))))))
                   
