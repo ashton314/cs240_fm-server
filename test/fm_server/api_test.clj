@@ -232,3 +232,24 @@
           (is (= (count new-events) 76))
           (is (= (count (set/intersection (into #{} new-family) (into #{} family))) 0))
           (is (= (count (set/intersection (into #{} new-events) (into #{} events))) 0)))))))
+
+(deftest load-test
+  (let [accounts [{:userName "bones" :password "doc" :firstName "Leonard" :lastName "McCoy" :gender "m" :email "mccoy@starfleet.ifp" :personID "bones-self"}
+                  {:userName "jim"   :password "captn" :firstName "James" :lastName "Kirk" :gender "m" :email "j.kirk@starfleet.ifp" :personID "jim-self"}]
+        people   [{:descendant "jim"   :personID "jim-self"     :firstName "James"   :lastName "Kirk"  :gender "m" :father "jim-father"   :mother "jim-mother"}
+                  {:descendant "bones" :personID "bones-self"   :firstName "Leonard" :lastName "McCoy" :gender "m" :father "bones-father" :mother "bones-mother"}
+                  {:descendant "jim"   :personID "jim-father"   :firstName "George"  :lastName "Kirk"  :gender "m" :spouse "jim-mother"}
+                  {:descendant "jim"   :personID "jim-mother"   :firstName "Winona"  :lastName "Kirk"  :gender "f" :spouse "jim-father"}
+                  {:descendant "bones" :personID "bones-father" :firstName "David"   :lastName "McCoy" :gender "m" :spouse "bones-mother"}
+                  {:descendant "bones" :personID "bones-mother" :firstName "Abigail" :lastName "McCoy" :gender "f" :spouse "bones-father"}]
+        events [{:descendant "jim" :eventID "kirk-born" :personID "jim-self" :eventType "birth" :latitude 42.0 :longitude -11.17 :country "Far Edge" :city "U.S.S. Kelvin" :year "2234"}
+                {:descendant "jim" :eventID "kirk-death" :personID "jim-father" :eventType "death" :latitude 42.0 :longitude -11.17 :country "Far Edge" :city "U.S.S. Kelvin" :year "2234"}]]
+    (let [resp (-> (mock/request :post "/load")
+                   (mock/json-body {:users accounts :persons people :events events})
+                   mock-request)]
+      (testing "fill test"
+        (let [resp-body (json/read-str (:body resp) :key-fn keyword)]
+          (is (= (:message resp-body) "Successfully added 2 users, 6 persons, and 2 events to the database."))
+          (is (= #{:jim-self :bones-self :jim-father :jim-mother :bones-father :bones-mother} (into #{} (keys (:persons resp-body)))) "map returned has correct keys")
+          (is (= #{:kirk-born :kirk-death} (into #{} (keys (:events resp-body)))) "map returned has correct keys"))))))
+

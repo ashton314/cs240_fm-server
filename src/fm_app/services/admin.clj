@@ -10,6 +10,35 @@
                                       [auth-token :as token-proto]
                                       [event :as event-proto])))
 
+(defn load
+  "Loads records into storage"
+  [storage logging users persons events]
+  (let [account-idx (into {} (map #(vector (:username %) (account-proto/create! (:account storage))) users))
+        person-idx  (into {} (map #(vector (:id %) (person-proto/create! (:person storage))) persons))
+        event-idx   (into {} (map #(vector (:id %) (event-proto/create! (:event storage))) events))]
+    (doall
+     (map #(account-proto/save! (:account storage) (conj % {:id (account-idx (:username %))
+                                                            :root_person (person-idx (:root_person %))}))
+          users))
+    (doall
+     (map #(person-proto/save! (:person storage) (conj % {:id (person-idx (:id %))
+                                                          :spouse (and (:spouse %) (person-idx (:spouse %)))
+                                                          :mother (and (:mother %) (person-idx (:mother %)))
+                                                          :father (and (:father %) (person-idx (:father %)))
+                                                          :owner_id (account-idx (:owner_id %))}))
+          persons))
+    (doall
+     (map #(event-proto/save! (:event storage) (dissoc (conj % {:id (event-idx (:id %))
+                                                                :timestamp (str (:year %) "-01-01")
+                                                                :person_id (person-idx (:person_id %))
+                                                                :owner_id (account-idx (:owner_id %))}) :year))
+          events))
+    {:people persons
+     :events events
+     :accounts users
+     :people_map person-idx
+     :event_map event-idx}))
+
 (defn clear-storage
   "Wipes all records from storage."
   [storage logging]
