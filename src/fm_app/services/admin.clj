@@ -10,7 +10,7 @@
                                       [auth-token :as token-proto]
                                       [event :as event-proto])))
 
-(defn load
+(defn load-records
   "Loads records into storage"
   [storage logging users persons events]
   (let [account-idx (into {} (map #(vector (:username %) (account-proto/create! (:account storage))) users))

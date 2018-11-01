@@ -20,7 +20,7 @@ Maybe make the `marry` function also return a new marriage event that I can use.
 *** DONE On loading people they have IDs. I'll need to convert those to numbers
 *** TODO More input validation (e.g. non-negative generations, etc.)
 
-*** TODO Endpoints to complete [9/9]
+*** DONE Endpoints to complete [9/9]
  - [X] /user/register
  - [X] /user/login
  - [X] /clear

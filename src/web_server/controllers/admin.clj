@@ -49,10 +49,10 @@
          error-resp
          (try
            (let [{people :people events :events accounts :accounts people-map :people_map event-map :event_map}
-                 (admin/load (:storage (:config app)) (:logger app)
-                             (map #(set/rename-keys % {:userName :username :firstName :first_name :lastName :last_name :personID :root_person}) (:users req-body))
-                             (map #(set/rename-keys % {:personID :id :firstName :first_name :lastName :last_name :descendant :owner_id}) (:persons req-body))
-                             (map #(set/rename-keys % {:personID :person_id :descendant :owner_id :eventID :id :eventType :event_type}) (:events req-body)))]
+                 (admin/load-records (:storage (:config app)) (:logger app)
+                                     (map #(set/rename-keys % {:userName :username :firstName :first_name :lastName :last_name :personID :root_person}) (:users req-body))
+                                     (map #(set/rename-keys % {:personID :id :firstName :first_name :lastName :last_name :descendant :owner_id}) (:persons req-body))
+                                     (map #(set/rename-keys % {:personID :person_id :descendant :owner_id :eventID :id :eventType :event_type}) (:events req-body)))]
              (-> {:message (str "Successfully added " (count accounts) " users, " (count people) " persons, and " (count events) " events to the database.")
                   :persons people-map :events event-map}
                  json/write-str

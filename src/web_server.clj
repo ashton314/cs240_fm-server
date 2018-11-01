@@ -51,5 +51,8 @@
   "Fire off the web server. Main method---port may be listed on command
   line. Otherwise the default 8080 will be used."
   [& args]
-  (ws-core/listen conf (app/create-app conf {:info #(log/info %) :error #(log/error %)
-                                             :warn #(log/warn %) :fatal #(log/fatal %)})))
+  (let [config (if args (conj conf {:server {:port (read-string (first args))}}) conf)]
+    (ws-core/listen config
+                    (app/create-app config
+                                    {:info #(log/info %) :error #(log/error %)
+                                     :warn #(log/warn %) :fatal #(log/fatal %)}))))

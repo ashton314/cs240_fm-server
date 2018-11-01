@@ -18,7 +18,7 @@
                  [org.clojure/tools.logging "0.4.1"] ; https://github.com/clojure/tools.logging
                  [org.clojure/tools.trace "0.7.10"]  ; https://github.com/clojure/tools.trace
                  ]
-  :main ^:skip-aot cl-interface
+  :main ^:skip-aot web-server
   :plugins [[lein-codox "0.10.5"]]
   :codox {:metadata {:doc/format :markdown}}
   :target-path "target/%s"
