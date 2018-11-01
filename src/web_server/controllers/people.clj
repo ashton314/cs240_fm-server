@@ -72,7 +72,8 @@
                                    :father (:father %)
                                    :mother (:mother %)
                                    :spouse (:spouse %)
-                                   :descendant (:username account)) people)}
+                                   :descendant (:username account))
+                        people)}
             json/write-str
             ring-response/response
             (ring-response/content-type "application/json")

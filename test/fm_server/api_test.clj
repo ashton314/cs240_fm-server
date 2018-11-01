@@ -137,6 +137,10 @@
                                              (:userName (json/read-str (:body reg_resp) :key-fn keyword))))))))
 
 (deftest fetch-test
+  (storage-account/migrate! (:account (:storage conf)))
+  (storage-authy/migrate! (:auth-token (:storage conf)))
+  (storage-person/migrate! (:person (:storage conf)))
+  (storage-event/migrate! (:event (:storage conf)))
   (let [kirk (str "kirk" (rand-int 100000))
         spock (str "spock" (rand-int 100000))
         kirk-data (json/read-str (:body (-> (mock/request :post "/user/register")
@@ -160,12 +164,18 @@
                                :lastName "Spock"
                                :gender :m})
                (person/unpack (select-keys (json/read-str (:body person-resp) :key-fn keyword)
-                                           [:descendant :personID :firstName :lastName :gender]))))))
+                                           [:descendant :personID :firstName :lastName :gender]))))
+        (is (not (nil? (:father (json/read-str (:body person-resp) :key-fn keyword)))) "spock has a father")))
 
     (testing "fetch mr. spock's people"
       (let [people-resp (mock-request (mock/header (mock/request :get "/person") "Authorization" (:authToken spock-data)))]
         (is (= 200 (:status people-resp)))
-        (is (= 31 (count (:data (json/read-str (:body people-resp) :key-fn keyword)))))))))
+        (is (= 31 (count (:data (json/read-str (:body people-resp) :key-fn keyword)))))))
+
+    (testing "fetching mr. spock's events"
+      (let [event-resp (mock-request (mock/header (mock/request :get "/event") "Authorization" (:authToken spock-data)))]
+        (is (= 200 (:status event-resp)))
+        (is (= 91 (count (:data (json/read-str (:body event-resp) :key-fn keyword)))))))))
                   
 
 ;; (deftest fill-test

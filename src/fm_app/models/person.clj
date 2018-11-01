@@ -14,8 +14,8 @@
    - `spouse` ditto
    - `owner_id` ID of Account that this belongs to
   "
-  (:gen-class))
-
+  (:gen-class)
+  (:require [fm-app.models.event :as event]))
 
 (defrecord Person [id first_name last_name gender father mother spouse owner_id])
 
@@ -74,4 +74,39 @@
                              [dad mom])
                         (conj person {:father (:id dad) :mother (:id mom)})))))))
 
-      
+(defn make-events
+  "Takes a person, a list of people in their family tree, a
+  base-year (for birth), an ID generation function, and some fake data
+  sources. Generates events for that person and recursively calls
+  make-events on the parents until the person's parents are nil."
+  [person family base-year gen-id gen-location gen-timestamp]
+  (let [idx (into {} (map #(vector (:id %) %) family))
+        loc1 (gen-location)
+        loc2 (gen-location)
+        loc3 (gen-location)
+        birth (event/unpack (conj loc1
+                                  {:id (gen-id)
+                                   :event_type :birth
+                                   :timestamp (gen-timestamp (+ base-year (rand-int 3)))
+                                   :owner_id (:owner_id person)
+                                   :person_id (:id person)}))
+        marriage (if (and (:spouse person) (= (:gender person) :f))
+                   (event/unpack (conj loc2
+                                       {:id (gen-id)
+                                        :event_type :marriage
+                                        :timestamp (gen-timestamp (+ base-year 20 (rand-int 5)))
+                                        :owner_id (:owner_id person)
+                                        :person_id (:id person)})))
+        death (event/unpack (conj loc3
+                                       {:id (gen-id)
+                                        :event_type :death
+                                        :timestamp (gen-timestamp (+ base-year 60 (rand-int 25)))
+                                        :owner_id (:owner_id person)
+                                        :person_id (:id person)}))]
+    (filter (complement nil?)
+            (flatten [birth marriage death
+                      (if (:father person) (make-events (idx (:father person)) family (- base-year 25) gen-id gen-location gen-timestamp))
+                      (if (:mother person) (make-events (idx (:mother person)) family (- base-year 25) gen-id gen-location gen-timestamp))]))))
+                             
+                             
+
