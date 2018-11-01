@@ -30,7 +30,7 @@
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   created_at TEXT DEFAULT(DATETIME('now')),
   updated_at TEXT DEFAULT(DATETIME('now')),
-  account_id INTEGER,
+  owner_id INTEGER,
   token TEXT,
   expires TEXT
 );"))

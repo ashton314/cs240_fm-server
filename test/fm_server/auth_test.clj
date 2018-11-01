@@ -19,7 +19,7 @@
           tok    (account/authenticate homsar "tinfoil")]
       (is (nil? (account/authenticate homsar "aluminum")) "rejected bad password")
       (is (auth-token/good? tok) "token reported as good (noop right now)")
-      (is (= (:account_id tok) (:id homsar)) "IDs match"))))
+      (is (= (:owner_id tok) (:id homsar)) "IDs match"))))
 
 (def account-db (account-store/map->AccountDbStorage
                  {:db-spec {:dbtype "sqlite" :dbname "/tmp/fm-server-test.db"}}))

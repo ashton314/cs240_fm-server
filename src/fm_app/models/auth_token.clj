@@ -2,7 +2,7 @@
   "Authorization token"
   (:gen-class))
 
-(defrecord AuthToken [id account_id token expires])
+(defrecord AuthToken [id owner_id token expires])
 
 (defn pack
   "Change an AuthToken into a native Clojure data structure."
@@ -27,6 +27,6 @@
 (defn generate-token
   "Creates a new Authentication Token."
   ([account-id]
-   (unpack {:account_id account-id :token (generate-random-string)}))
+   (unpack {:owner_id account-id :token (generate-random-string)}))
   ([account-id expires]
-   (unpack {:account_id account-id :expires expires :token (generate-random-string)})))
+   (unpack {:owner_id account-id :expires expires :token (generate-random-string)})))

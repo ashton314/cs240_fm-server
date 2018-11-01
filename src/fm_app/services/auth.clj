@@ -24,7 +24,7 @@
   "Retrieve an account by token."
   [storage logger token]
   (if-let [token (find-token (:auth-token storage) logger token)]
-    (if-let [account (account-proto/fetch (:account storage) (:account_id token))]
+    (if-let [account (account-proto/fetch (:account storage) (:owner_id token))]
       (account/unpack account))))
 
 (defn authenticate

@@ -71,7 +71,7 @@
         (is (= (:status resp) 201) "got ok back")
         (is (= (:id (account-proto/find-username (:account (:storage conf))
                                                  (:username deets)))
-               (:account_id (auth-token-proto/fetch (:auth-token (:storage conf))
+               (:owner_id (auth-token-proto/fetch (:auth-token (:storage conf))
                                              (:authToken (json/read-str (:body resp) :key-fn keyword)))))))
 
       (let [resp (-> (mock/request :post "/user/register") (mock/json-body deets) mock-request)]
