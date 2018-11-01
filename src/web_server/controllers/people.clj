@@ -60,6 +60,39 @@
 (defn get-people
   "Gets all People for the current user"
   [request params app]
-  ((:info (:logger app)) (str "People controller got: " request))
-  ((:info (:logger app)) (str "Params: " params "\nApp: " app))
-  (ring-response/response "get-people hit!"))
+  (if-let [account (auth/find-account-by-token (:storage (:config app)) (:logger app)
+                                               ((:headers request) "authorization"))]
+    (try
+      (if-let [people (people/lookup-person (:person (:storage (:config app))) (:logger app)
+                                            :owner_id (:id account))]
+        (-> {:data (map #(hash-map :personID (:id %)     ; person found
+                                   :firstName (:first_name %)
+                                   :lastName (:last_name %)
+                                   :gender (:gender %)
+                                   :father (:father %)
+                                   :mother (:mother %)
+                                   :spouse (:spouse %)
+                                   :descendant (:username account)) people)}
+            json/write-str
+            ring-response/response
+            (ring-response/content-type "application/json")
+            (ring-response/status 200))
+        (-> {:message "Not found."}     ; person not found, but auth good
+            json/write-str
+            ring-response/response
+            (ring-response/content-type "application/json")
+            (ring-response/status 404)))
+      (catch Error e
+        (let [message (.getMessage e)]
+          ((:error (:logger app)) (str "Problem finding people: " message))
+          ((:error (:logger app)) (str "Request object: " request))
+          (-> {:message "Server error."}
+              json/write-str
+              ring-response/response
+              (ring-response/content-type "application/json")
+              (ring-response/status 500)))))
+    (-> {:message "Not authorized."}
+        json/write-str
+        ring-response/response
+        (ring-response/content-type "application/json")
+        (ring-response/status 500))))
