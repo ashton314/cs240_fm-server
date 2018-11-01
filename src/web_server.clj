@@ -14,7 +14,7 @@
 (defn- db-spec-default
   "Returns default db-spec"
   []
-  {:dbtype "sqlite" :dbname "/tmp/fm-server-test.db"})
+  {:dbtype "sqlite" :dbname "/tmp/fm-server.db"})
 
 (def conf
   "Configruation for the web server"
@@ -43,6 +43,7 @@
             "/event/:event_id/" :get-event
             "/event" :get-all-events
             "/event/" :get-all-events
+            "/" :home-page
             "/index.html" :home-page
             "/css/:filename" :css
             "/favicon.ico" :favicon}})
@@ -51,6 +52,10 @@
   "Fire off the web server. Main method---port may be listed on command
   line. Otherwise the default 8080 will be used."
   [& args]
+  (storage-account/migrate! (:account (:storage conf)))
+  (storage-authy/migrate! (:auth-token (:storage conf)))
+  (storage-person/migrate! (:person (:storage conf)))
+  (storage-event/migrate! (:event (:storage conf)))
   (let [config (if args (conj conf {:server {:port (read-string (first args))}}) conf)]
     (ws-core/listen config
                     (app/create-app config

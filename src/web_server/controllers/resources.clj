@@ -8,17 +8,17 @@
 (defn render
   "Renders a static resource"
   [request params app]
-  ((:info (:logger app)) (str "render got request: " request))
+  ((:info (:logger app)) "rendering index.html")
   (ring-response/file-response "index.html" {:root "resources/web"}))
 
 (defn render-css
   "Renders a static resource"
   [request params app]
-  ((:info (:logger app)) (str "render got request: " request))
+  ((:info (:logger app)) "rendering CSS files")
   (ring-response/file-response (:filename params) {:root "resources/web/css"}))
 
 (defn render-favicon
   "Renders a static resource"
   [request params app]
-  ((:info (:logger app)) (str "render got request: " request))
+  ((:info (:logger app)) "rendering favicon")
   (ring-response/file-response "favicon.ico" {:root "resources/web"}))
