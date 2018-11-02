@@ -41,4 +41,5 @@
                                             (contains? #{:baptism ":baptism" "baptism"} (:event_type data)) :baptism
                                             (contains? #{:christening ":christening" "christening"} (:event_type data)) :christening
                                             (contains? #{:marriage ":marriage" "marriage"} (:event_type data)) :marriage
-                                            (contains? #{:death ":death" "death"} (:event_type data)) :death)})))
+                                            (contains? #{:death ":death" "death"} (:event_type data)) :death
+                                            :else (:event_type data))})))

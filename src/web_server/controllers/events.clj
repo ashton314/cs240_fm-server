@@ -57,19 +57,21 @@
      (try
        (if-let [events (event-service/get-events (:event (:storage (:config app))) (:logger app)
                                     (:id account))]
-         (-> {:data (map #(hash-map :descendant (:username account)
-                                    :eventID (:id %)
-                                    :personID (:person_id %)
-                                    :eventType (name (:event_type %))
-                                    :latitude (:latitude %)
-                                    :longitude (:longitude %)
-                                    :country (:country %)
-                                    :city (:city %)
-                                    :year (get (re-find #"^(\d+)-" (:timestamp %)) 1))
-                         events)}
-             json/write-str
-             ring-response/response
-             (ring-response/status 200))
+         (do
+           (prn events)
+           (-> {:data (map #(hash-map :descendant (:username account)
+                                      :eventID (:id %)
+                                      :personID (:person_id %)
+                                      :eventType (and (:event_type %) (name (:event_type %)))
+                                      :latitude (:latitude %)
+                                      :longitude (:longitude %)
+                                      :country (:country %)
+                                      :city (:city %)
+                                      :year (get (re-find #"^(\d+)-" (:timestamp %)) 1))
+                           events)}
+               json/write-str
+               ring-response/response
+               (ring-response/status 200)))
          (-> {:message "Not found."}  ; event not found for this person
              json/write-str
              ring-response/response
