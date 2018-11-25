@@ -57,9 +57,7 @@
      (try
        (if-let [events (event-service/get-events (:event (:storage (:config app))) (:logger app)
                                     (:id account))]
-         (do
-           (prn events)
-           (-> {:data (map #(hash-map :descendant (:username account)
+         (-> {:data (map #(hash-map :descendant (:username account)
                                       :eventID (:id %)
                                       :personID (:person_id %)
                                       :eventType (and (:event_type %) (name (:event_type %)))
@@ -71,7 +69,7 @@
                            events)}
                json/write-str
                ring-response/response
-               (ring-response/status 200)))
+               (ring-response/status 200))
          (-> {:message "Not found."}  ; event not found for this person
              json/write-str
              ring-response/response

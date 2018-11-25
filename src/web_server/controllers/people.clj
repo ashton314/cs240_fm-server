@@ -55,13 +55,13 @@
       (let [person (people/get-person (:person (:storage (:config app))) (:logger app)
                                          (:person_id params))]
         (if (and person (= (:owner_id person) (:id account)))
-          (-> {:personID (:id person)     ; person found
+          (-> {:personID (str (:id person))     ; person found
                :firstName (:first_name person)
                :lastName (:last_name person)
                :gender (:gender person)
-               :father (:father person)
-               :mother (:mother person)
-               :spouse (:spouse person)
+               :father (str (:father person))
+               :mother (str (:mother person))
+               :spouse (str (:spouse person))
                :descendant (:username account)}
               json/write-str
               ring-response/response
@@ -97,13 +97,13 @@
     (try
       (if-let [people (people/lookup-person (:person (:storage (:config app))) (:logger app)
                                             :owner_id (:id account))]
-        (-> {:data (map #(hash-map :personID (:id %)     ; person found
+        (-> {:data (map #(hash-map :personID (str (:id %))     ; person found
                                    :firstName (:first_name %)
                                    :lastName (:last_name %)
                                    :gender (:gender %)
-                                   :father (:father %)
-                                   :mother (:mother %)
-                                   :spouse (:spouse %)
+                                   :father (str (:father %))
+                                   :mother (str (:mother %))
+                                   :spouse (str (:spouse %))
                                    :descendant (:username account))
                         people)}
             json/write-str

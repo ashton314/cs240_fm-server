@@ -24,7 +24,7 @@
           (if token
             (-> {:authToken (:token token)
                  :userName (:userName req-body)
-                 :personID (:root_person account)}
+                 :personID (str (:root_person account))}
                 json/write-str
                 ring-response/response
                 (ring-response/content-type "application/json")

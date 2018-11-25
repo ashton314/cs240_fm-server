@@ -161,7 +161,7 @@
       (let [person-resp (mock-request (mock/header (mock/request :get (str "/person/" (:personID spock-data))) "Authorization" (:authToken spock-data)))]
         (is (= 200 (:status person-resp)))
         (is (= (person/unpack {:descendant spock
-                               :personID (:personID spock-data)
+                               :personID (str (:personID spock-data))
                                :firstName "Mr."
                                :lastName "Spock"
                                :gender :m})

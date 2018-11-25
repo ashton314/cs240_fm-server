@@ -29,7 +29,7 @@
                                    (:storage (:config app)) (:logger app))]
           (-> {:authToken (:token (:auth_token resp))
                :userName (:username resp)
-               :personID (:person_id resp)}
+               :personID (str (:person_id resp))}
               json/write-str
               ring-response/response
               (ring-response/header "Location" (str "/user/" (:username resp)))
