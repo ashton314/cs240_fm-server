@@ -1,36 +1,13 @@
-# fm-server
+# Family Map Server
 
-FIXME: description
+Server component for CS 240 at BYU
 
-## Installation
+This project, instead of being written in Java, is programmed in Clojure. Any student wishing to cheat shall be burned if you try to use this project. :)
 
-Download from http://example.com/FIXME.
+## Author
 
-## Usage
-
-FIXME: explanation
-
-    $ java -jar fm-server-0.1.0-standalone.jar [args]
-
-## Options
-
-FIXME: listing of options this app accepts.
-
-## Examples
-
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
+Ashton Wiersdorf
 
 ## License
 
-Copyright © 2018 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Copyright © 2018 Ashton Wiersdorf
